@@ -1,0 +1,42 @@
+{% comment %}
+  List out your main-menu linklist (default)
+  More info on linklists:
+    - http://docs.shopify.com/themes/liquid-variables/linklists
+{% endcomment %}
+
+{% if settings.display_megamenu %}
+{% assign items_list = settings.megamenu_items | split:"," | strip | downcase %}
+{% endif %}
+
+<ul class="site-nav sttropez-nav clearfix">
+  {% for link in linklists.sttropez-main-menu.links %}
+  	{% assign i = forloop.index | downcase %}
+    {% assign cat = link.title | downcase %}
+
+    <li {% if linklists[link.handle] != empty or linklists[link.handle | prepend: "sttropez-"] != empty %}class="dropdown {% if settings.display_megamenu and items_list contains cat and cat != "tanning tips"%}mega-menu{% endif %}"{% endif %}>
+      <a href="{{ link.url }}" class="{% if link.active %}current{% endif %}">
+        <span>{{ link.title }}</span>
+        {% comment %}
+        {% if linklists[link.handle | prepend: "sttropez"] != empty and settings.show_dropdown_arrow %}<span class="icon-dropdown"></span>{% endif %}
+        {% endcomment %}
+
+      </a> 	
+    
+      {% comment %}
+      Check if menu item is Mega menu
+      {% endcomment %}
+      {% if settings.display_megamenu and items_list contains cat and cat != "tanning tips"%}
+        <div class="site-nav-dropdown">
+        {% include 'mega-menu-sttropez', menu_prefix: 'sttropez' %}
+        </div>
+      {% endif %}
+
+    </li>
+  {% endfor %}
+  <div class="nav-search on">{% include 'search-bar' %}</div>
+  <div class="marker-hold">
+    <div id="marker"></div>
+  <div>
+</ul>
+
+

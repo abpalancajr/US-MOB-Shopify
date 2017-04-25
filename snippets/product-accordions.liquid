@@ -1,0 +1,7 @@
+{% if settings.show_tab == 'vertical' %}            
+<div class="panel-group" id="accordion">
+  {% if settings.display_product_detail_description %}
+    {{ product.description }}
+  {% endif %}
+</div>            
+{% endif %}

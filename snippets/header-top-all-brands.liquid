@@ -1,0 +1,126 @@
+<div class="top">
+	<div class="brands">
+		<ul>
+			<li>
+				<a href="http://new.staging.minetanbodyskin.com/">
+					<div class="minetan-brand"></div>
+				</a>
+			</li>
+			
+			<li>
+				<a href="http://new.taneasyprotools.com">
+					<div class="taneasy-brand"></div>
+				</a>
+			</li>
+			<!-- <li>
+				<a href="http://fitnesstan.com">
+					<div class="fitness-brand"></div>
+				</a>
+			</li> -->
+			<li>
+				<a href="http://new.btan.rocks">
+					<div class="btan-brand"></div>
+				</a>
+			</li>
+
+			<li>
+				<a href="http://pureblanc.com/" target="_blank">
+					<div class="pure-brand"></div>
+				</a>
+			</li>
+			<li>
+				<a href="http://privatelabeltan.com/" target="_blank">
+					<div class="privatelabel-brand"></div>
+				</a>
+			</li>
+		</ul>
+	</div>
+	{% assign freeShipping = settings.free_shipping_normal %}
+	{% if customer and (customer.tags contains "Trade Pros") %}
+	  {% assign freeShipping = settings.free_shipping_pro %}
+	{% endif %}
+	{% if customer and (customer.tags contains "Wholesalers") %}
+	  {% assign freeShipping = settings.free_shipping_whs %}
+	{% endif %}
+  
+    {% comment %}
+	<div class="freeshipping"><span class="bold">FREE SHIPPING</span> FOR ALL ORDERS OVER {{freeShipping}}</div>
+    {% endcomment %}
+
+	<ul class="topbar-links">
+		{% if shop.customer_accounts_enabled %}
+		{% if customer %}
+		  <li>
+		    <a href="/account">My Account</a>
+		  </li>
+		  <li>
+		    {{ 'Logout' | customer_logout_link }}
+		  </li>
+		{% else %}
+		  <li>
+		    {{ 'Join' | customer_register_link }}
+		  </li>
+		  <li>
+		    {{ 'Login' | customer_login_link }}
+		  </li>
+		{% endif %}
+		{% endif %}
+		<li>
+			<a href="http://company.marqueofbrands.com/contact/">
+				Contact
+			</a>
+		</li>
+		<li>
+			<a href="/pages/wish-list">
+				Wishlist
+			</a>
+		</li>
+		<li class="has-dropdown wrapper-top-cart" id="cartToggle">
+            <p class="top-cart">
+              <span class="icon">&nbsp;</span>
+              <a href="javascript:void(0)">
+                <span class="first">Cart</span>
+                <span id="cartCount">{{ cart.item_count }}</span>
+              </a> 
+            </p>
+            <div id="dropdown-cart" style="display:none"> 
+              <div class="no-items">
+                <p>It appears that your cart is currently empty!</p>
+                <p class="text-continue"><a href="javascript:void(0)">Continue Shopping</a></p>
+              </div>
+              <div class="has-items">
+                <ol class="mini-products-list">  
+                  {% for item in cart.items %}
+                  <li class="item" id="cart-item-{{item.id}}">
+                    <a href="{{item.url}}" title="{{item.title}}" class="product-image"><img src="{{ item.image | product_img_url: 'small' }}" alt="{{item.title}}"></a>
+                    <div class="product-details">
+                      <a href="javascript:void(0)" title="Remove This Item" class="btn-remove">X</a>
+                      <p class="product-name"><a href="{{item.url}}">{{ item.product.title }}</a></p>
+                      <div class="option">
+                        {% if item.product.variants.size != 0 %}
+                        {% unless item.variant.title contains 'Default' %}
+                        <small>{{ item.variant.title }}</small>
+                        {% endunless %}
+                        {% endif %}
+                      </div>
+                      <div class="cart-collateral"><span class="price">{{item.price | money}}</span> x {{item.quantity}}</div>
+                    </div>
+                  </li>
+                  {% endfor %}
+                </ol>
+                <div class="summary">                
+                  <p class="total">
+                    <span class="label" style="color:#000">Total:</span>
+                    <span class="price">{{cart.total_price | money}}</span> 
+                  </p>
+                </div>
+                <div class="actions">
+                  <button class="btn" onclick="window.location='/checkout'">Checkout</button>
+                </div>
+                <p class="text-cart"><a href="/cart">Or View Cart</a></p>
+              </div>
+            </div>
+		</li>
+	</ul>
+	
+</div>

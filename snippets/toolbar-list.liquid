@@ -1,0 +1,54 @@
+<div class="toolbar">
+  <div class="view-mode">
+    <label>View as</label>
+    <!--<span class="grid" title="Grid view">Grid</span>-->
+    <a class="grid" href="grid" title="Grid view">Grid</a>  
+    <a class="list active" href="list" title="List view">List</a>  
+  </div>
+  
+    <div class="filter-show btn-group">
+      <label>Show</label>
+      <button class="btn btn-2 dropdown-toggle" data-toggle="dropdown">
+        <i class="icon-exchange"></i>
+        {% if paginate.page_size != 50 %}
+        <span>{{paginate.page_size}}</span>
+        {% else %}
+        <span>all</span>
+        {% endif %}
+        <i class="icon-chevron-down"></i>
+      </button>
+      
+      <ul class="dropdown-menu" role="menu">
+        {% if settings.collection_results_per_page != blank %}
+        {% assign product_per_page = settings.collection_results_per_page %}
+        {% else %}
+        {% assign product_per_page = 12 %}
+        {% endif %}
+        {% assign current_page_size = paginate.page_size %}
+        <li {% if current_page_size == 12 %} class="active" {% endif %}><a href="{{ product_per_page }}">{{ product_per_page }}</a></li>
+       	<li {% if current_page_size == 16 %} class="active" {% endif %} ><a href="16">16</a></li>
+       	<li {% if current_page_size == 32 %} class="active" {% endif %}><a href="32">32</a></li>
+       	<li {% if current_page_size == 50 %} class="active" {% endif %}><a href="all">all</a></li>         
+      </ul>
+    </div>
+    
+    <div class="filter-sortby btn-group">
+      <label for="sort-by">Sort by</label> 
+      <button class="btn btn-2 dropdown-toggle" data-toggle="dropdown">
+        <i class="icon-exchange"></i>
+        <span>Featured</span>
+        <i class="icon-chevron-down"></i>
+      </button>
+      
+      <ul class="dropdown-menu" role="menu">
+        <li class="active"><a href="manual">Featured</a></li>
+        <li><a href="price-ascending">Price: Low to High</a></li>
+        <li><a href="price-descending">Price: High to Low</a></li>
+        <li><a href="title-ascending">A-Z</a></li>
+        <li><a href="title-descending">Z-A</a></li>
+        <li><a href="created-ascending">Oldest to Newest</a></li>
+        <li><a href="created-descending">Newest to Oldest</a></li>
+        <li><a href="best-selling">Best Selling</a></li>
+      </ul>
+    </div> 
+</div>

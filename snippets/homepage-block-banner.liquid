@@ -1,0 +1,26 @@
+{% if settings.display_banner %}
+<section class="banner wow fadeInUp">
+  {{ 'banner.jpg' | asset_url | img_tag }}
+  <div class="container">
+    <div class="inner">
+      <div class="content">
+        {% if settings.banner_text_title != blank %}
+        <h2>{{ settings.banner_text_title }}</h2>
+        <p class="line">&nbsp;</p>
+        {% endif %}
+        <p>
+          {% if settings.banner_text_description != blank %}
+          {{ settings.banner_text_description }}
+          {% endif %}
+        </p>
+        {% if settings.banner_button_text != blank %}
+        <a href="{{ settings.banner_button_link }}" title="{{ settings.banner_button_text }}" class="btn">
+          {{ settings.banner_button_text }}
+          <span class="arrow">arrow</span>
+        </a>		
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}

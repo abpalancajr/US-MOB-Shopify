@@ -1,0 +1,29 @@
+{% assign classes = "col-xs-3 sidebar collection-sidebar" %}
+{% if product %}
+{% assign classes = "col-xs-3 sidebar" %}
+{% endif %}
+<div class="{{classes}}">
+  {% if settings.display_sidebar_categories %}
+  <div class="widget sidebar-links">
+    <div class="widget-title"><h3><span>SHOP</span></h3></div>
+    <div class="widget-content">
+      <ul>
+        {% for link in linklists["taneasy-pro-tools"].links %}
+          {% assign link_collection = link.object %}
+          <li><a href="{{ link.url }}" {% if collection.handle contains link.handle %} class="active" {% endif %}>{{ link.title }}</a>
+          {% if linklists[link_collection.handle].links.size > 0 %}
+            <ul>
+                {% for sublink in linklists[link_collection.handle].links %}
+                  <li><a href="{{ sublink.url }}" {% if collection.handle contains sublink.handle %} class="active" {% endif %}>{{ sublink.title }}</a>
+                  </li>
+                {% endfor %}
+            </ul>
+          {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+  
+</div>

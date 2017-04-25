@@ -1,0 +1,1162 @@
+{%- comment %}
+  Hey there! This snippet is managed by Locksmith (uselocksmith.com). You can
+  fiddle with what's below, but your changes will be reset the next time that
+  Locksmith interacts with your shop.
+
+  Last updated: Tue, 14 Feb 2017 07:13:27 +0000
+  Integration version: v5.11
+{% endcomment -%}
+
+{%assign _0 = customer%}{%assign _1 = shop%}{%- capture _%}{%capture locksmith_client -%}<script>/*!
+  * Reqwest! A general purpose XHR connection manager
+  * license MIT (c) Dustin Diaz 2015
+  * https://github.com/ded/reqwest
+  */
+!function(e,t,r){"undefined"!=typeof module&&module.exports?module.exports=r():"function"==typeof define&&define.amd?define(r):t[e]=r()}("reqwest",this,function(){function succeed(e){var t=protocolRe.exec(e.url);return t=t&&t[1]||context.location.protocol,httpsRe.test(t)?twoHundo.test(e.request.status):!!e.request.response}function handleReadyState(e,t,r){return function(){return e._aborted?r(e.request):e._timedOut?r(e.request,"Request is aborted: timeout"):void(e.request&&4==e.request[readyState]&&(e.request.onreadystatechange=noop,succeed(e)?t(e.request):r(e.request)))}}function setHeaders(e,t){var r,a=t.headers||{};a.Accept=a.Accept||defaultHeaders.accept[t.type]||defaultHeaders.accept["*"];var n="undefined"!=typeof FormData&&t.data instanceof FormData;!t.crossOrigin&&!a[requestedWith]&&(a[requestedWith]=defaultHeaders.requestedWith),!a[contentType]&&!n&&(a[contentType]=t.contentType||defaultHeaders.contentType);for(r in a)a.hasOwnProperty(r)&&"setRequestHeader"in e&&e.setRequestHeader(r,a[r])}function setCredentials(e,t){"undefined"!=typeof t.withCredentials&&"undefined"!=typeof e.withCredentials&&(e.withCredentials=!!t.withCredentials)}function generalCallback(e){lastValue=e}function urlappend(e,t){return e+(/\?/.test(e)?"&":"?")+t}function handleJsonp(e,t,r,a){var n=uniqid++,s=e.jsonpCallback||"callback",i=e.jsonpCallbackName||reqwest.getcallbackPrefix(n),o=new RegExp("((^|\\?|&)"+s+")=([^&]+)"),l=a.match(o),u=doc.createElement("script"),h=0,d=-1!==navigator.userAgent.indexOf("MSIE 10.0");return l?"?"===l[3]?a=a.replace(o,"$1="+i):i=l[3]:a=urlappend(a,s+"="+i),context[i]=generalCallback,u.type="text/javascript",u.src=a,u.async=!0,"undefined"!=typeof u.onreadystatechange&&!d&&(u.htmlFor=u.id="_reqwest_"+n),u.onload=u.onreadystatechange=function(){return u[readyState]&&"complete"!==u[readyState]&&"loaded"!==u[readyState]||h?!1:(u.onload=u.onreadystatechange=null,u.onclick&&u.onclick(),t(lastValue),lastValue=void 0,head.removeChild(u),h=1,void 0)},head.appendChild(u),{abort:function(){u.onload=u.onreadystatechange=null,r({},"Request is aborted: timeout",{}),lastValue=void 0,head.removeChild(u),h=1}}}function getRequest(e,t){var r,a=this.o,n=(a.method||"GET").toUpperCase(),s="string"==typeof a?a:a.url,i=a.processData!==!1&&a.data&&"string"!=typeof a.data?reqwest.toQueryString(a.data):a.data||null,o=!1;return("jsonp"==a.type||"GET"==n)&&i&&(s=urlappend(s,i),i=null),"jsonp"==a.type?handleJsonp(a,e,t,s):(r=a.xhr&&a.xhr(a)||xhr(a),r.open(n,s,a.async===!1?!1:!0),setHeaders(r,a),setCredentials(r,a),context[xDomainRequest]&&r instanceof context[xDomainRequest]?(r.onload=e,r.onerror=t,r.onprogress=function(){},o=!0):r.onreadystatechange=handleReadyState(this,e,t),a.before&&a.before(r),o?setTimeout(function(){r.send(i)},200):r.send(i),r)}function Reqwest(e,t){this.o=e,this.fn=t,init.apply(this,arguments)}function setType(e){return null===e?void 0:e.match("json")?"json":e.match("javascript")?"js":e.match("text")?"html":e.match("xml")?"xml":void 0}function init(o,fn){function complete(e){for(o.timeout&&clearTimeout(self.timeout),self.timeout=null;self._completeHandlers.length>0;)self._completeHandlers.shift()(e)}function success(resp){var type=o.type||resp&&setType(resp.getResponseHeader("Content-Type"));resp="jsonp"!==type?self.request:resp;var filteredResponse=globalSetupOptions.dataFilter(resp.responseText,type),r=filteredResponse;try{resp.responseText=r}catch(e){}if(r)switch(type){case"json":try{resp=context.JSON?context.JSON.parse(r):eval("("+r+")")}catch(err){return error(resp,"Could not parse JSON in response",err)}break;case"js":resp=eval(r);break;case"html":resp=r;break;case"xml":resp=resp.responseXML&&resp.responseXML.parseError&&resp.responseXML.parseError.errorCode&&resp.responseXML.parseError.reason?null:resp.responseXML}for(self._responseArgs.resp=resp,self._fulfilled=!0,fn(resp),self._successHandler(resp);self._fulfillmentHandlers.length>0;)resp=self._fulfillmentHandlers.shift()(resp);complete(resp)}function timedOut(){self._timedOut=!0,self.request.abort()}function error(e,t,r){for(e=self.request,self._responseArgs.resp=e,self._responseArgs.msg=t,self._responseArgs.t=r,self._erred=!0;self._errorHandlers.length>0;)self._errorHandlers.shift()(e,t,r);complete(e)}this.url="string"==typeof o?o:o.url,this.timeout=null,this._fulfilled=!1,this._successHandler=function(){},this._fulfillmentHandlers=[],this._errorHandlers=[],this._completeHandlers=[],this._erred=!1,this._responseArgs={};var self=this;fn=fn||function(){},o.timeout&&(this.timeout=setTimeout(function(){timedOut()},o.timeout)),o.success&&(this._successHandler=function(){o.success.apply(o,arguments)}),o.error&&this._errorHandlers.push(function(){o.error.apply(o,arguments)}),o.complete&&this._completeHandlers.push(function(){o.complete.apply(o,arguments)}),this.request=getRequest.call(this,success,error)}function reqwest(e,t){return new Reqwest(e,t)}function normalize(e){return e?e.replace(/\r?\n/g,"\r\n"):""}function serial(e,t){var r,a,n,s,i=e.name,o=e.tagName.toLowerCase(),l=function(e){e&&!e.disabled&&t(i,normalize(e.attributes.value&&e.attributes.value.specified?e.value:e.text))};if(!e.disabled&&i)switch(o){case"input":/reset|button|image|file/i.test(e.type)||(r=/checkbox/i.test(e.type),a=/radio/i.test(e.type),n=e.value,(!r&&!a||e.checked)&&t(i,normalize(r&&""===n?"on":n)));break;case"textarea":t(i,normalize(e.value));break;case"select":if("select-one"===e.type.toLowerCase())l(e.selectedIndex>=0?e.options[e.selectedIndex]:null);else for(s=0;e.length&&s<e.length;s++)e.options[s].selected&&l(e.options[s])}}function eachFormElement(){var e,t,r=this,a=function(e,t){var a,n,s;for(a=0;a<t.length;a++)for(s=e[byTag](t[a]),n=0;n<s.length;n++)serial(s[n],r)};for(t=0;t<arguments.length;t++)e=arguments[t],/input|select|textarea/i.test(e.tagName)&&serial(e,r),a(e,["input","select","textarea"])}function serializeQueryString(){return reqwest.toQueryString(reqwest.serializeArray.apply(null,arguments))}function serializeHash(){var e={};return eachFormElement.apply(function(t,r){t in e?(e[t]&&!isArray(e[t])&&(e[t]=[e[t]]),e[t].push(r)):e[t]=r},arguments),e}function buildParams(e,t,r,a){var n,s,i,o=/\[\]$/;if(isArray(t))for(s=0;t&&s<t.length;s++)i=t[s],r||o.test(e)?a(e,i):buildParams(e+"["+("object"==typeof i?s:"")+"]",i,r,a);else if(t&&"[object Object]"===t.toString())for(n in t)buildParams(e+"["+n+"]",t[n],r,a);else a(e,t)}var context=this;if("window"in context)var doc=document,byTag="getElementsByTagName",head=doc[byTag]("head")[0];else{var XHR2;try{XHR2=require("xhr2")}catch(ex){throw new Error("Peer dependency `xhr2` required! Please npm install xhr2")}}var httpsRe=/^http/,protocolRe=/(^\w+):\/\//,twoHundo=/^(20\d|1223)$/,readyState="readyState",contentType="Content-Type",requestedWith="X-Requested-With",uniqid=0,callbackPrefix="reqwest_"+ +new Date,lastValue,xmlHttpRequest="XMLHttpRequest",xDomainRequest="XDomainRequest",noop=function(){},isArray="function"==typeof Array.isArray?Array.isArray:function(e){return e instanceof Array},defaultHeaders={contentType:"application/x-www-form-urlencoded",requestedWith:xmlHttpRequest,accept:{"*":"text/javascript, text/html, application/xml, text/xml, */*",xml:"application/xml, text/xml",html:"text/html",text:"text/plain",json:"application/json, text/javascript",js:"application/javascript, text/javascript"}},xhr=function(e){if(e.crossOrigin===!0){var t=context[xmlHttpRequest]?new XMLHttpRequest:null;if(t&&"withCredentials"in t)return t;if(context[xDomainRequest])return new XDomainRequest;throw new Error("Browser does not support cross-origin requests")}return context[xmlHttpRequest]?new XMLHttpRequest:XHR2?new XHR2:new ActiveXObject("Microsoft.XMLHTTP")},globalSetupOptions={dataFilter:function(e){return e}};return Reqwest.prototype={abort:function(){this._aborted=!0,this.request.abort()},retry:function(){init.call(this,this.o,this.fn)},then:function(e,t){return e=e||function(){},t=t||function(){},this._fulfilled?this._responseArgs.resp=e(this._responseArgs.resp):this._erred?t(this._responseArgs.resp,this._responseArgs.msg,this._responseArgs.t):(this._fulfillmentHandlers.push(e),this._errorHandlers.push(t)),this},always:function(e){return this._fulfilled||this._erred?e(this._responseArgs.resp):this._completeHandlers.push(e),this},fail:function(e){return this._erred?e(this._responseArgs.resp,this._responseArgs.msg,this._responseArgs.t):this._errorHandlers.push(e),this},"catch":function(e){return this.fail(e)}},reqwest.serializeArray=function(){var e=[];return eachFormElement.apply(function(t,r){e.push({name:t,value:r})},arguments),e},reqwest.serialize=function(){if(0===arguments.length)return"";var e,t,r=Array.prototype.slice.call(arguments,0);return e=r.pop(),e&&e.nodeType&&r.push(e)&&(e=null),e&&(e=e.type),t="map"==e?serializeHash:"array"==e?reqwest.serializeArray:serializeQueryString,t.apply(null,r)},reqwest.toQueryString=function(e,t){var r,a,n=t||!1,s=[],i=encodeURIComponent,o=function(e,t){t="function"==typeof t?t():null==t?"":t,s[s.length]=i(e)+"="+i(t)};if(isArray(e))for(a=0;e&&a<e.length;a++)o(e[a].name,e[a].value);else for(r in e)e.hasOwnProperty(r)&&buildParams(r,e[r],n,o);return s.join("&").replace(/%20/g,"+")},reqwest.getcallbackPrefix=function(){return callbackPrefix},reqwest.compat=function(e,t){return e&&(e.type&&(e.method=e.type)&&delete e.type,e.dataType&&(e.type=e.dataType),e.jsonpCallback&&(e.jsonpCallbackName=e.jsonpCallback)&&delete e.jsonpCallback,e.jsonp&&(e.jsonpCallback=e.jsonp)),new Reqwest(e,t)},reqwest.ajaxSetup=function(e){e=e||{};for(var t in e)globalSetupOptions[t]=e[t]},reqwest}),!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var t;t="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this,t.pako=e()}}(function(){return function e(t,r,a){function n(i,o){if(!r[i]){if(!t[i]){var l="function"==typeof require&&require;if(!o&&l)return l(i,!0);if(s)return s(i,!0);var u=new Error("Cannot find module '"+i+"'");throw u.code="MODULE_NOT_FOUND",u}var h=r[i]={exports:{}};t[i][0].call(h.exports,function(e){var r=t[i][1][e];return n(r?r:e)},h,h.exports,e,t,r,a)}return r[i].exports}for(var s="function"==typeof require&&require,i=0;i<a.length;i++)n(a[i]);return n}({1:[function(e,t,r){"use strict";var a="undefined"!=typeof Uint8Array&&"undefined"!=typeof Uint16Array&&"undefined"!=typeof Int32Array;r.assign=function(e){for(var t=Array.prototype.slice.call(arguments,1);t.length;){var r=t.shift();if(r){if("object"!=typeof r)throw new TypeError(r+"must be non-object");for(var a in r)r.hasOwnProperty(a)&&(e[a]=r[a])}}return e},r.shrinkBuf=function(e,t){return e.length===t?e:e.subarray?e.subarray(0,t):(e.length=t,e)};var n={arraySet:function(e,t,r,a,n){if(t.subarray&&e.subarray)return void e.set(t.subarray(r,r+a),n);for(var s=0;a>s;s++)e[n+s]=t[r+s]},flattenChunks:function(e){var t,r,a,n,s,i;for(a=0,t=0,r=e.length;r>t;t++)a+=e[t].length;for(i=new Uint8Array(a),n=0,t=0,r=e.length;r>t;t++)s=e[t],i.set(s,n),n+=s.length;return i}},s={arraySet:function(e,t,r,a,n){for(var s=0;a>s;s++)e[n+s]=t[r+s]},flattenChunks:function(e){return[].concat.apply([],e)}};r.setTyped=function(e){e?(r.Buf8=Uint8Array,r.Buf16=Uint16Array,r.Buf32=Int32Array,r.assign(r,n)):(r.Buf8=Array,r.Buf16=Array,r.Buf32=Array,r.assign(r,s))},r.setTyped(a)},{}],2:[function(e,t,r){"use strict";function a(e,t){if(65537>t&&(e.subarray&&i||!e.subarray&&s))return String.fromCharCode.apply(null,n.shrinkBuf(e,t));for(var r="",a=0;t>a;a++)r+=String.fromCharCode(e[a]);return r}var n=e("./common"),s=!0,i=!0;try{String.fromCharCode.apply(null,[0])}catch(e){s=!1}try{String.fromCharCode.apply(null,new Uint8Array(1))}catch(e){i=!1}for(var o=new n.Buf8(256),l=0;256>l;l++)o[l]=l>=252?6:l>=248?5:l>=240?4:l>=224?3:l>=192?2:1;o[254]=o[254]=1,r.string2buf=function(e){var t,r,a,s,i,o=e.length,l=0;for(s=0;o>s;s++)r=e.charCodeAt(s),55296===(64512&r)&&o>s+1&&(a=e.charCodeAt(s+1),56320===(64512&a)&&(r=65536+(r-55296<<10)+(a-56320),s++)),l+=128>r?1:2048>r?2:65536>r?3:4;for(t=new n.Buf8(l),i=0,s=0;l>i;s++)r=e.charCodeAt(s),55296===(64512&r)&&o>s+1&&(a=e.charCodeAt(s+1),56320===(64512&a)&&(r=65536+(r-55296<<10)+(a-56320),s++)),128>r?t[i++]=r:2048>r?(t[i++]=192|r>>>6,t[i++]=128|63&r):65536>r?(t[i++]=224|r>>>12,t[i++]=128|r>>>6&63,t[i++]=128|63&r):(t[i++]=240|r>>>18,t[i++]=128|r>>>12&63,t[i++]=128|r>>>6&63,t[i++]=128|63&r);return t},r.buf2binstring=function(e){return a(e,e.length)},r.binstring2buf=function(e){for(var t=new n.Buf8(e.length),r=0,a=t.length;a>r;r++)t[r]=e.charCodeAt(r);return t},r.buf2string=function(e,t){var r,n,s,i,l=t||e.length,u=new Array(2*l);for(n=0,r=0;l>r;)if(s=e[r++],128>s)u[n++]=s;else if(i=o[s],i>4)u[n++]=65533,r+=i-1;else{for(s&=2===i?31:3===i?15:7;i>1&&l>r;)s=s<<6|63&e[r++],i--;i>1?u[n++]=65533:65536>s?u[n++]=s:(s-=65536,u[n++]=55296|s>>10&1023,u[n++]=56320|1023&s)}return a(u,n)},r.utf8border=function(e,t){var r;for(t=t||e.length,t>e.length&&(t=e.length),r=t-1;r>=0&&128===(192&e[r]);)r--;return 0>r?t:0===r?t:r+o[e[r]]>t?r:t}},{"./common":1}],3:[function(e,t,r){"use strict";function a(e,t,r,a){for(var n=65535&e|0,s=e>>>16&65535|0,i=0;0!==r;){i=r>2e3?2e3:r,r-=i;do n=n+t[a++]|0,s=s+n|0;while(--i);n%=65521,s%=65521}return n|s<<16|0}t.exports=a},{}],4:[function(e,t,r){"use strict";function a(){for(var e,t=[],r=0;256>r;r++){e=r;for(var a=0;8>a;a++)e=1&e?3988292384^e>>>1:e>>>1;t[r]=e}return t}function n(e,t,r,a){var n=s,i=a+r;e^=-1;for(var o=a;i>o;o++)e=e>>>8^n[255&(e^t[o])];return-1^e}var s=a();t.exports=n},{}],5:[function(e,t,r){"use strict";function a(e,t){return e.msg=B[t],t}function n(e){return(e<<1)-(e>4?9:0)}function s(e){for(var t=e.length;--t>=0;)e[t]=0}function i(e){var t=e.state,r=t.pending;r>e.avail_out&&(r=e.avail_out),0!==r&&(H.arraySet(e.output,t.pending_buf,t.pending_out,r,e.next_out),e.next_out+=r,t.pending_out+=r,e.total_out+=r,e.avail_out-=r,t.pending-=r,0===t.pending&&(t.pending_out=0))}function o(e,t){T._tr_flush_block(e,e.block_start>=0?e.block_start:-1,e.strstart-e.block_start,t),e.block_start=e.strstart,i(e.strm)}function l(e,t){e.pending_buf[e.pending++]=t}function u(e,t){e.pending_buf[e.pending++]=t>>>8&255,e.pending_buf[e.pending++]=255&t}function h(e,t,r,a){var n=e.avail_in;return n>a&&(n=a),0===n?0:(e.avail_in-=n,H.arraySet(t,e.input,e.next_in,n,r),1===e.state.wrap?e.adler=j(e.adler,t,n,r):2===e.state.wrap&&(e.adler=E(e.adler,t,n,r)),e.next_in+=n,e.total_in+=n,n)}function d(e,t){var r,a,n=e.max_chain_length,s=e.strstart,i=e.prev_length,o=e.nice_match,l=e.strstart>e.w_size-de?e.strstart-(e.w_size-de):0,u=e.window,h=e.w_mask,d=e.prev,c=e.strstart+he,f=u[s+i-1],m=u[s+i];e.prev_length>=e.good_match&&(n>>=2),o>e.lookahead&&(o=e.lookahead);do if(r=t,u[r+i]===m&&u[r+i-1]===f&&u[r]===u[s]&&u[++r]===u[s+1]){s+=2,r++;do;while(u[++s]===u[++r]&&u[++s]===u[++r]&&u[++s]===u[++r]&&u[++s]===u[++r]&&u[++s]===u[++r]&&u[++s]===u[++r]&&u[++s]===u[++r]&&u[++s]===u[++r]&&c>s);if(a=he-(c-s),s=c-he,a>i){if(e.match_start=t,i=a,a>=o)break;f=u[s+i-1],m=u[s+i]}}while((t=d[t&h])>l&&0!==--n);return i<=e.lookahead?i:e.lookahead}function c(e){var t,r,a,n,s,i=e.w_size;do{if(n=e.window_size-e.lookahead-e.strstart,e.strstart>=i+(i-de)){H.arraySet(e.window,e.window,i,i,0),e.match_start-=i,e.strstart-=i,e.block_start-=i,r=e.hash_size,t=r;do a=e.head[--t],e.head[t]=a>=i?a-i:0;while(--r);r=i,t=r;do a=e.prev[--t],e.prev[t]=a>=i?a-i:0;while(--r);n+=i}if(0===e.strm.avail_in)break;if(r=h(e.strm,e.window,e.strstart+e.lookahead,n),e.lookahead+=r,e.lookahead+e.insert>=ue)for(s=e.strstart-e.insert,e.ins_h=e.window[s],e.ins_h=(e.ins_h<<e.hash_shift^e.window[s+1])&e.hash_mask;e.insert&&(e.ins_h=(e.ins_h<<e.hash_shift^e.window[s+ue-1])&e.hash_mask,e.prev[s&e.w_mask]=e.head[e.ins_h],e.head[e.ins_h]=s,s++,e.insert--,!(e.lookahead+e.insert<ue)););}while(e.lookahead<de&&0!==e.strm.avail_in)}function f(e,t){var r=65535;for(r>e.pending_buf_size-5&&(r=e.pending_buf_size-5);;){if(e.lookahead<=1){if(c(e),0===e.lookahead&&t===O)return ve;if(0===e.lookahead)break}e.strstart+=e.lookahead,e.lookahead=0;var a=e.block_start+r;if((0===e.strstart||e.strstart>=a)&&(e.lookahead=e.strstart-a,e.strstart=a,o(e,!1),0===e.strm.avail_out))return ve;if(e.strstart-e.block_start>=e.w_size-de&&(o(e,!1),0===e.strm.avail_out))return ve}return e.insert=0,t===I?(o(e,!0),0===e.strm.avail_out?ke:xe):e.strstart>e.block_start&&(o(e,!1),0===e.strm.avail_out)?ve:ve}function m(e,t){for(var r,a;;){if(e.lookahead<de){if(c(e),e.lookahead<de&&t===O)return ve;if(0===e.lookahead)break}if(r=0,e.lookahead>=ue&&(e.ins_h=(e.ins_h<<e.hash_shift^e.window[e.strstart+ue-1])&e.hash_mask,r=e.prev[e.strstart&e.w_mask]=e.head[e.ins_h],e.head[e.ins_h]=e.strstart),0!==r&&e.strstart-r<=e.w_size-de&&(e.match_length=d(e,r)),e.match_length>=ue)if(a=T._tr_tally(e,e.strstart-e.match_start,e.match_length-ue),e.lookahead-=e.match_length,e.match_length<=e.max_lazy_match&&e.lookahead>=ue){e.match_length--;do e.strstart++,e.ins_h=(e.ins_h<<e.hash_shift^e.window[e.strstart+ue-1])&e.hash_mask,r=e.prev[e.strstart&e.w_mask]=e.head[e.ins_h],e.head[e.ins_h]=e.strstart;while(0!==--e.match_length);e.strstart++}else e.strstart+=e.match_length,e.match_length=0,e.ins_h=e.window[e.strstart],e.ins_h=(e.ins_h<<e.hash_shift^e.window[e.strstart+1])&e.hash_mask;else a=T._tr_tally(e,0,e.window[e.strstart]),e.lookahead--,e.strstart++;if(a&&(o(e,!1),0===e.strm.avail_out))return ve}return e.insert=e.strstart<ue-1?e.strstart:ue-1,t===I?(o(e,!0),0===e.strm.avail_out?ke:xe):e.last_lit&&(o(e,!1),0===e.strm.avail_out)?ve:ye}function _(e,t){for(var r,a,n;;){if(e.lookahead<de){if(c(e),e.lookahead<de&&t===O)return ve;if(0===e.lookahead)break}if(r=0,e.lookahead>=ue&&(e.ins_h=(e.ins_h<<e.hash_shift^e.window[e.strstart+ue-1])&e.hash_mask,r=e.prev[e.strstart&e.w_mask]=e.head[e.ins_h],e.head[e.ins_h]=e.strstart),e.prev_length=e.match_length,e.prev_match=e.match_start,e.match_length=ue-1,0!==r&&e.prev_length<e.max_lazy_match&&e.strstart-r<=e.w_size-de&&(e.match_length=d(e,r),e.match_length<=5&&(e.strategy===W||e.match_length===ue&&e.strstart-e.match_start>4096)&&(e.match_length=ue-1)),e.prev_length>=ue&&e.match_length<=e.prev_length){n=e.strstart+e.lookahead-ue,a=T._tr_tally(e,e.strstart-1-e.prev_match,e.prev_length-ue),e.lookahead-=e.prev_length-1,e.prev_length-=2;do++e.strstart<=n&&(e.ins_h=(e.ins_h<<e.hash_shift^e.window[e.strstart+ue-1])&e.hash_mask,r=e.prev[e.strstart&e.w_mask]=e.head[e.ins_h],e.head[e.ins_h]=e.strstart);while(0!==--e.prev_length);if(e.match_available=0,e.match_length=ue-1,e.strstart++,a&&(o(e,!1),0===e.strm.avail_out))return ve}else if(e.match_available){if(a=T._tr_tally(e,0,e.window[e.strstart-1]),a&&o(e,!1),e.strstart++,e.lookahead--,0===e.strm.avail_out)return ve}else e.match_available=1,e.strstart++,e.lookahead--}return e.match_available&&(a=T._tr_tally(e,0,e.window[e.strstart-1]),e.match_available=0),e.insert=e.strstart<ue-1?e.strstart:ue-1,t===I?(o(e,!0),0===e.strm.avail_out?ke:xe):e.last_lit&&(o(e,!1),0===e.strm.avail_out)?ve:ye}function p(e,t){for(var r,a,n,s,i=e.window;;){if(e.lookahead<=he){if(c(e),e.lookahead<=he&&t===O)return ve;if(0===e.lookahead)break}if(e.match_length=0,e.lookahead>=ue&&e.strstart>0&&(n=e.strstart-1,a=i[n],a===i[++n]&&a===i[++n]&&a===i[++n])){s=e.strstart+he;do;while(a===i[++n]&&a===i[++n]&&a===i[++n]&&a===i[++n]&&a===i[++n]&&a===i[++n]&&a===i[++n]&&a===i[++n]&&s>n);e.match_length=he-(s-n),e.match_length>e.lookahead&&(e.match_length=e.lookahead)}if(e.match_length>=ue?(r=T._tr_tally(e,1,e.match_length-ue),e.lookahead-=e.match_length,e.strstart+=e.match_length,e.match_length=0):(r=T._tr_tally(e,0,e.window[e.strstart]),e.lookahead--,e.strstart++),r&&(o(e,!1),0===e.strm.avail_out))return ve}return e.insert=0,t===I?(o(e,!0),0===e.strm.avail_out?ke:xe):e.last_lit&&(o(e,!1),0===e.strm.avail_out)?ve:ye}function g(e,t){for(var r;;){if(0===e.lookahead&&(c(e),0===e.lookahead)){if(t===O)return ve;break}if(e.match_length=0,r=T._tr_tally(e,0,e.window[e.strstart]),e.lookahead--,e.strstart++,r&&(o(e,!1),0===e.strm.avail_out))return ve}return e.insert=0,t===I?(o(e,!0),0===e.strm.avail_out?ke:xe):e.last_lit&&(o(e,!1),0===e.strm.avail_out)?ve:ye}function b(e,t,r,a,n){this.good_length=e,this.max_lazy=t,this.nice_length=r,this.max_chain=a,this.func=n}function w(e){e.window_size=2*e.w_size,s(e.head),e.max_lazy_match=R[e.level].max_lazy,e.good_match=R[e.level].good_length,e.nice_match=R[e.level].nice_length,e.max_chain_length=R[e.level].max_chain,e.strstart=0,e.block_start=0,e.lookahead=0,e.insert=0,e.match_length=e.prev_length=ue-1,e.match_available=0,e.ins_h=0}function v(){this.strm=null,this.status=0,this.pending_buf=null,this.pending_buf_size=0,this.pending_out=0,this.pending=0,this.wrap=0,this.gzhead=null,this.gzindex=0,this.method=K,this.last_flush=-1,this.w_size=0,this.w_bits=0,this.w_mask=0,this.window=null,this.window_size=0,this.prev=null,this.head=null,this.ins_h=0,this.hash_size=0,this.hash_bits=0,this.hash_mask=0,this.hash_shift=0,this.block_start=0,this.match_length=0,this.prev_match=0,this.match_available=0,this.strstart=0,this.match_start=0,this.lookahead=0,this.prev_length=0,this.max_chain_length=0,this.max_lazy_match=0,this.level=0,this.strategy=0,this.good_match=0,this.nice_match=0,this.dyn_ltree=new H.Buf16(2*oe),this.dyn_dtree=new H.Buf16(2*(2*se+1)),this.bl_tree=new H.Buf16(2*(2*ie+1)),s(this.dyn_ltree),s(this.dyn_dtree),s(this.bl_tree),this.l_desc=null,this.d_desc=null,this.bl_desc=null,this.bl_count=new H.Buf16(le+1),this.heap=new H.Buf16(2*ne+1),s(this.heap),this.heap_len=0,this.heap_max=0,this.depth=new H.Buf16(2*ne+1),s(this.depth),this.l_buf=0,this.lit_bufsize=0,this.last_lit=0,this.d_buf=0,this.opt_len=0,this.static_len=0,this.matches=0,this.insert=0,this.bi_buf=0,this.bi_valid=0}function y(e){var t;return e&&e.state?(e.total_in=e.total_out=0,e.data_type=Z,t=e.state,t.pending=0,t.pending_out=0,t.wrap<0&&(t.wrap=-t.wrap),t.status=t.wrap?fe:be,e.adler=2===t.wrap?0:1,t.last_flush=O,T._tr_init(t),N):a(e,M)}function k(e){var t=y(e);return t===N&&w(e.state),t}function x(e,t){return e&&e.state?2!==e.state.wrap?M:(e.state.gzhead=t,N):M}function z(e,t,r,n,s,i){if(!e)return M;var o=1;if(t===J&&(t=6),0>n?(o=0,n=-n):n>15&&(o=2,n-=16),1>s||s>Y||r!==K||8>n||n>15||0>t||t>9||0>i||i>G)return a(e,M);8===n&&(n=9);var l=new v;return e.state=l,l.strm=e,l.wrap=o,l.gzhead=null,l.w_bits=n,l.w_size=1<<l.w_bits,l.w_mask=l.w_size-1,l.hash_bits=s+7,l.hash_size=1<<l.hash_bits,l.hash_mask=l.hash_size-1,l.hash_shift=~~((l.hash_bits+ue-1)/ue),l.window=new H.Buf8(2*l.w_size),l.head=new H.Buf16(l.hash_size),l.prev=new H.Buf16(l.w_size),l.lit_bufsize=1<<s+6,l.pending_buf_size=4*l.lit_bufsize,l.pending_buf=new H.Buf8(l.pending_buf_size),l.d_buf=1*l.lit_bufsize,l.l_buf=3*l.lit_bufsize,l.level=t,l.strategy=i,l.method=r,k(e)}function q(e,t){return z(e,t,K,ee,te,$)}function A(e,t){var r,o,h,d;if(!e||!e.state||t>D||0>t)return e?a(e,M):M;if(o=e.state,!e.output||!e.input&&0!==e.avail_in||o.status===we&&t!==I)return a(e,0===e.avail_out?F:M);if(o.strm=e,r=o.last_flush,o.last_flush=t,o.status===fe)if(2===o.wrap)e.adler=0,l(o,31),l(o,139),l(o,8),o.gzhead?(l(o,(o.gzhead.text?1:0)+(o.gzhead.hcrc?2:0)+(o.gzhead.extra?4:0)+(o.gzhead.name?8:0)+(o.gzhead.comment?16:0)),l(o,255&o.gzhead.time),l(o,o.gzhead.time>>8&255),l(o,o.gzhead.time>>16&255),l(o,o.gzhead.time>>24&255),l(o,9===o.level?2:o.strategy>=Q||o.level<2?4:0),l(o,255&o.gzhead.os),o.gzhead.extra&&o.gzhead.extra.length&&(l(o,255&o.gzhead.extra.length),l(o,o.gzhead.extra.length>>8&255)),o.gzhead.hcrc&&(e.adler=E(e.adler,o.pending_buf,o.pending,0)),o.gzindex=0,o.status=me):(l(o,0),l(o,0),l(o,0),l(o,0),l(o,0),l(o,9===o.level?2:o.strategy>=Q||o.level<2?4:0),l(o,ze),o.status=be);else{var c=K+(o.w_bits-8<<4)<<8,f=-1;f=o.strategy>=Q||o.level<2?0:o.level<6?1:6===o.level?2:3,c|=f<<6,0!==o.strstart&&(c|=ce),c+=31-c%31,o.status=be,u(o,c),0!==o.strstart&&(u(o,e.adler>>>16),u(o,65535&e.adler)),e.adler=1}if(o.status===me)if(o.gzhead.extra){for(h=o.pending;o.gzindex<(65535&o.gzhead.extra.length)&&(o.pending!==o.pending_buf_size||(o.gzhead.hcrc&&o.pending>h&&(e.adler=E(e.adler,o.pending_buf,o.pending-h,h)),i(e),h=o.pending,o.pending!==o.pending_buf_size));)l(o,255&o.gzhead.extra[o.gzindex]),o.gzindex++;o.gzhead.hcrc&&o.pending>h&&(e.adler=E(e.adler,o.pending_buf,o.pending-h,h)),o.gzindex===o.gzhead.extra.length&&(o.gzindex=0,o.status=_e)}else o.status=_e;if(o.status===_e)if(o.gzhead.name){h=o.pending;do{if(o.pending===o.pending_buf_size&&(o.gzhead.hcrc&&o.pending>h&&(e.adler=E(e.adler,o.pending_buf,o.pending-h,h)),i(e),h=o.pending,o.pending===o.pending_buf_size)){d=1;break}d=o.gzindex<o.gzhead.name.length?255&o.gzhead.name.charCodeAt(o.gzindex++):0,l(o,d)}while(0!==d);o.gzhead.hcrc&&o.pending>h&&(e.adler=E(e.adler,o.pending_buf,o.pending-h,h)),0===d&&(o.gzindex=0,o.status=pe)}else o.status=pe;if(o.status===pe)if(o.gzhead.comment){h=o.pending;do{if(o.pending===o.pending_buf_size&&(o.gzhead.hcrc&&o.pending>h&&(e.adler=E(e.adler,o.pending_buf,o.pending-h,h)),i(e),h=o.pending,o.pending===o.pending_buf_size)){d=1;break}d=o.gzindex<o.gzhead.comment.length?255&o.gzhead.comment.charCodeAt(o.gzindex++):0,l(o,d)}while(0!==d);o.gzhead.hcrc&&o.pending>h&&(e.adler=E(e.adler,o.pending_buf,o.pending-h,h)),0===d&&(o.status=ge)}else o.status=ge;if(o.status===ge&&(o.gzhead.hcrc?(o.pending+2>o.pending_buf_size&&i(e),o.pending+2<=o.pending_buf_size&&(l(o,255&e.adler),l(o,e.adler>>8&255),e.adler=0,o.status=be)):o.status=be),0!==o.pending){if(i(e),0===e.avail_out)return o.last_flush=-1,N}else if(0===e.avail_in&&n(t)<=n(r)&&t!==I)return a(e,F);if(o.status===we&&0!==e.avail_in)return a(e,F);if(0!==e.avail_in||0!==o.lookahead||t!==O&&o.status!==we){var m=o.strategy===Q?g(o,t):o.strategy===V?p(o,t):R[o.level].func(o,t);if(m!==ke&&m!==xe||(o.status=we),m===ve||m===ke)return 0===e.avail_out&&(o.last_flush=-1),N;if(m===ye&&(t===L?T._tr_align(o):t!==D&&(T._tr_stored_block(o,0,0,!1),t===U&&(s(o.head),0===o.lookahead&&(o.strstart=0,o.block_start=0,o.insert=0))),i(e),0===e.avail_out))return o.last_flush=-1,N}return t!==I?N:o.wrap<=0?P:(2===o.wrap?(l(o,255&e.adler),l(o,e.adler>>8&255),l(o,e.adler>>16&255),l(o,e.adler>>24&255),l(o,255&e.total_in),l(o,e.total_in>>8&255),l(o,e.total_in>>16&255),l(o,e.total_in>>24&255)):(u(o,e.adler>>>16),u(o,65535&e.adler)),i(e),o.wrap>0&&(o.wrap=-o.wrap),0!==o.pending?N:P)}function S(e){var t;return e&&e.state?(t=e.state.status,t!==fe&&t!==me&&t!==_e&&t!==pe&&t!==ge&&t!==be&&t!==we?a(e,M):(e.state=null,t===be?a(e,X):N)):M}function C(e,t){var r,a,n,i,o,l,u,h,d=t.length;if(!e||!e.state)return M;if(r=e.state,i=r.wrap,2===i||1===i&&r.status!==fe||r.lookahead)return M;for(1===i&&(e.adler=j(e.adler,t,d,0)),r.wrap=0,d>=r.w_size&&(0===i&&(s(r.head),r.strstart=0,r.block_start=0,r.insert=0),h=new H.Buf8(r.w_size),H.arraySet(h,t,d-r.w_size,r.w_size,0),t=h,d=r.w_size),o=e.avail_in,l=e.next_in,u=e.input,e.avail_in=d,e.next_in=0,e.input=t,c(r);r.lookahead>=ue;){a=r.strstart,n=r.lookahead-(ue-1);do r.ins_h=(r.ins_h<<r.hash_shift^r.window[a+ue-1])&r.hash_mask,r.prev[a&r.w_mask]=r.head[r.ins_h],r.head[r.ins_h]=a,a++;while(--n);r.strstart=a,r.lookahead=ue-1,c(r)}return r.strstart+=r.lookahead,r.block_start=r.strstart,r.insert=r.lookahead,r.lookahead=0,r.match_length=r.prev_length=ue-1,r.match_available=0,e.next_in=l,e.input=u,e.avail_in=o,r.wrap=i,N}var R,H=e("../utils/common"),T=e("./trees"),j=e("./adler32"),E=e("./crc32"),B=e("./messages"),O=0,L=1,U=3,I=4,D=5,N=0,P=1,M=-2,X=-3,F=-5,J=-1,W=1,Q=2,V=3,G=4,$=0,Z=2,K=8,Y=9,ee=15,te=8,re=29,ae=256,ne=ae+1+re,se=30,ie=19,oe=2*ne+1,le=15,ue=3,he=258,de=he+ue+1,ce=32,fe=42,me=69,_e=73,pe=91,ge=103,be=113,we=666,ve=1,ye=2,ke=3,xe=4,ze=3;R=[new b(0,0,0,0,f),new b(4,4,8,4,m),new b(4,5,16,8,m),new b(4,6,32,32,m),new b(4,4,16,16,_),new b(8,16,32,32,_),new b(8,16,128,128,_),new b(8,32,128,256,_),new b(32,128,258,1024,_),new b(32,258,258,4096,_)],r.deflateInit=q,r.deflateInit2=z,r.deflateReset=k,r.deflateResetKeep=y,r.deflateSetHeader=x,r.deflate=A,r.deflateEnd=S,r.deflateSetDictionary=C,r.deflateInfo="pako deflate (from Nodeca project)"},{"../utils/common":1,"./adler32":3,"./crc32":4,"./messages":6,"./trees":7}],6:[function(e,t,r){"use strict";t.exports={2:"need dictionary",1:"stream end",0:"","-1":"file error","-2":"stream error","-3":"data error","-4":"insufficient memory","-5":"buffer error","-6":"incompatible version"}},{}],7:[function(e,t,r){"use strict";function a(e){for(var t=e.length;--t>=0;)e[t]=0}function n(e,t,r,a,n){this.static_tree=e,this.extra_bits=t,this.extra_base=r,this.elems=a,this.max_length=n,this.has_stree=e&&e.length}function s(e,t){this.dyn_tree=e,this.max_code=0,this.stat_desc=t}function i(e){return 256>e?le[e]:le[256+(e>>>7)]}function o(e,t){e.pending_buf[e.pending++]=255&t,e.pending_buf[e.pending++]=t>>>8&255}function l(e,t,r){e.bi_valid>G-r?(e.bi_buf|=t<<e.bi_valid&65535,o(e,e.bi_buf),e.bi_buf=t>>G-e.bi_valid,e.bi_valid+=r-G):(e.bi_buf|=t<<e.bi_valid&65535,e.bi_valid+=r)}function u(e,t,r){l(e,r[2*t],r[2*t+1])}function h(e,t){var r=0;do r|=1&e,e>>>=1,r<<=1;while(--t>0);return r>>>1}function d(e){16===e.bi_valid?(o(e,e.bi_buf),e.bi_buf=0,e.bi_valid=0):e.bi_valid>=8&&(e.pending_buf[e.pending++]=255&e.bi_buf,e.bi_buf>>=8,e.bi_valid-=8)}function c(e,t){var r,a,n,s,i,o,l=t.dyn_tree,u=t.max_code,h=t.stat_desc.static_tree,d=t.stat_desc.has_stree,c=t.stat_desc.extra_bits,f=t.stat_desc.extra_base,m=t.stat_desc.max_length,_=0;for(s=0;V>=s;s++)e.bl_count[s]=0;for(l[2*e.heap[e.heap_max]+1]=0,r=e.heap_max+1;Q>r;r++)a=e.heap[r],s=l[2*l[2*a+1]+1]+1,s>m&&(s=m,_++),l[2*a+1]=s,a>u||(e.bl_count[s]++,i=0,a>=f&&(i=c[a-f]),o=l[2*a],e.opt_len+=o*(s+i),d&&(e.static_len+=o*(h[2*a+1]+i)));if(0!==_){do{for(s=m-1;0===e.bl_count[s];)s--;e.bl_count[s]--,e.bl_count[s+1]+=2,e.bl_count[m]--,_-=2}while(_>0);for(s=m;0!==s;s--)for(a=e.bl_count[s];0!==a;)n=e.heap[--r],n>u||(l[2*n+1]!==s&&(e.opt_len+=(s-l[2*n+1])*l[2*n],l[2*n+1]=s),a--)}}function f(e,t,r){var a,n,s=new Array(V+1),i=0;for(a=1;V>=a;a++)s[a]=i=i+r[a-1]<<1;for(n=0;t>=n;n++){var o=e[2*n+1];0!==o&&(e[2*n]=h(s[o]++,o))}}function m(){var e,t,r,a,s,i=new Array(V+1);for(r=0,a=0;M-1>a;a++)for(he[a]=r,e=0;e<1<<te[a];e++)ue[r++]=a;for(ue[r-1]=a,s=0,a=0;16>a;a++)for(de[a]=s,e=0;e<1<<re[a];e++)le[s++]=a;for(s>>=7;J>a;a++)for(de[a]=s<<7,e=0;e<1<<re[a]-7;e++)le[256+s++]=a;for(t=0;V>=t;t++)i[t]=0;for(e=0;143>=e;)ie[2*e+1]=8,e++,i[8]++;for(;255>=e;)ie[2*e+1]=9,e++,i[9]++;for(;279>=e;)ie[2*e+1]=7,e++,i[7]++;for(;287>=e;)ie[2*e+1]=8,e++,i[8]++;for(f(ie,F+1,i),e=0;J>e;e++)oe[2*e+1]=5,oe[2*e]=h(e,5);ce=new n(ie,te,X+1,F,V),fe=new n(oe,re,0,J,V),me=new n(new Array(0),ae,0,W,$)}function _(e){var t;for(t=0;F>t;t++)e.dyn_ltree[2*t]=0;for(t=0;J>t;t++)e.dyn_dtree[2*t]=0;for(t=0;W>t;t++)e.bl_tree[2*t]=0;e.dyn_ltree[2*Z]=1,e.opt_len=e.static_len=0,e.last_lit=e.matches=0}function p(e){e.bi_valid>8?o(e,e.bi_buf):e.bi_valid>0&&(e.pending_buf[e.pending++]=e.bi_buf),e.bi_buf=0,e.bi_valid=0}function g(e,t,r,a){p(e),a&&(o(e,r),o(e,~r)),j.arraySet(e.pending_buf,e.window,t,r,e.pending),e.pending+=r}function b(e,t,r,a){var n=2*t,s=2*r;return e[n]<e[s]||e[n]===e[s]&&a[t]<=a[r]}function w(e,t,r){for(var a=e.heap[r],n=r<<1;n<=e.heap_len&&(n<e.heap_len&&b(t,e.heap[n+1],e.heap[n],e.depth)&&n++,!b(t,a,e.heap[n],e.depth));)e.heap[r]=e.heap[n],r=n,n<<=1;e.heap[r]=a}function v(e,t,r){var a,n,s,o,h=0;if(0!==e.last_lit)do a=e.pending_buf[e.d_buf+2*h]<<8|e.pending_buf[e.d_buf+2*h+1],n=e.pending_buf[e.l_buf+h],h++,0===a?u(e,n,t):(s=ue[n],u(e,s+X+1,t),o=te[s],0!==o&&(n-=he[s],l(e,n,o)),a--,s=i(a),u(e,s,r),o=re[s],0!==o&&(a-=de[s],l(e,a,o)));while(h<e.last_lit);u(e,Z,t)}function y(e,t){var r,a,n,s=t.dyn_tree,i=t.stat_desc.static_tree,o=t.stat_desc.has_stree,l=t.stat_desc.elems,u=-1;for(e.heap_len=0,e.heap_max=Q,r=0;l>r;r++)0!==s[2*r]?(e.heap[++e.heap_len]=u=r,e.depth[r]=0):s[2*r+1]=0;for(;e.heap_len<2;)n=e.heap[++e.heap_len]=2>u?++u:0,s[2*n]=1,e.depth[n]=0,e.opt_len--,o&&(e.static_len-=i[2*n+1]);for(t.max_code=u,r=e.heap_len>>1;r>=1;r--)w(e,s,r);n=l;do r=e.heap[1],e.heap[1]=e.heap[e.heap_len--],w(e,s,1),a=e.heap[1],e.heap[--e.heap_max]=r,e.heap[--e.heap_max]=a,s[2*n]=s[2*r]+s[2*a],e.depth[n]=(e.depth[r]>=e.depth[a]?e.depth[r]:e.depth[a])+1,s[2*r+1]=s[2*a+1]=n,e.heap[1]=n++,w(e,s,1);while(e.heap_len>=2);e.heap[--e.heap_max]=e.heap[1],c(e,t),f(s,u,e.bl_count)}function k(e,t,r){var a,n,s=-1,i=t[1],o=0,l=7,u=4;for(0===i&&(l=138,u=3),t[2*(r+1)+1]=65535,a=0;r>=a;a++)n=i,i=t[2*(a+1)+1],++o<l&&n===i||(u>o?e.bl_tree[2*n]+=o:0!==n?(n!==s&&e.bl_tree[2*n]++,e.bl_tree[2*K]++):10>=o?e.bl_tree[2*Y]++:e.bl_tree[2*ee]++,o=0,s=n,0===i?(l=138,u=3):n===i?(l=6,u=3):(l=7,u=4))}function x(e,t,r){var a,n,s=-1,i=t[1],o=0,h=7,d=4;for(0===i&&(h=138,d=3),a=0;r>=a;a++)if(n=i,i=t[2*(a+1)+1],!(++o<h&&n===i)){if(d>o){do u(e,n,e.bl_tree);while(0!==--o)}else 0!==n?(n!==s&&(u(e,n,e.bl_tree),o--),u(e,K,e.bl_tree),l(e,o-3,2)):10>=o?(u(e,Y,e.bl_tree),
+l(e,o-3,3)):(u(e,ee,e.bl_tree),l(e,o-11,7));o=0,s=n,0===i?(h=138,d=3):n===i?(h=6,d=3):(h=7,d=4)}}function z(e){var t;for(k(e,e.dyn_ltree,e.l_desc.max_code),k(e,e.dyn_dtree,e.d_desc.max_code),y(e,e.bl_desc),t=W-1;t>=3&&0===e.bl_tree[2*ne[t]+1];t--);return e.opt_len+=3*(t+1)+5+5+4,t}function q(e,t,r,a){var n;for(l(e,t-257,5),l(e,r-1,5),l(e,a-4,4),n=0;a>n;n++)l(e,e.bl_tree[2*ne[n]+1],3);x(e,e.dyn_ltree,t-1),x(e,e.dyn_dtree,r-1)}function A(e){var t,r=4093624447;for(t=0;31>=t;t++,r>>>=1)if(1&r&&0!==e.dyn_ltree[2*t])return B;if(0!==e.dyn_ltree[18]||0!==e.dyn_ltree[20]||0!==e.dyn_ltree[26])return O;for(t=32;X>t;t++)if(0!==e.dyn_ltree[2*t])return O;return B}function S(e){_e||(m(),_e=!0),e.l_desc=new s(e.dyn_ltree,ce),e.d_desc=new s(e.dyn_dtree,fe),e.bl_desc=new s(e.bl_tree,me),e.bi_buf=0,e.bi_valid=0,_(e)}function C(e,t,r,a){l(e,(U<<1)+(a?1:0),3),g(e,t,r,!0)}function R(e){l(e,I<<1,3),u(e,Z,ie),d(e)}function H(e,t,r,a){var n,s,i=0;e.level>0?(e.strm.data_type===L&&(e.strm.data_type=A(e)),y(e,e.l_desc),y(e,e.d_desc),i=z(e),n=e.opt_len+3+7>>>3,s=e.static_len+3+7>>>3,n>=s&&(n=s)):n=s=r+5,n>=r+4&&-1!==t?C(e,t,r,a):e.strategy===E||s===n?(l(e,(I<<1)+(a?1:0),3),v(e,ie,oe)):(l(e,(D<<1)+(a?1:0),3),q(e,e.l_desc.max_code+1,e.d_desc.max_code+1,i+1),v(e,e.dyn_ltree,e.dyn_dtree)),_(e),a&&p(e)}function T(e,t,r){return e.pending_buf[e.d_buf+2*e.last_lit]=t>>>8&255,e.pending_buf[e.d_buf+2*e.last_lit+1]=255&t,e.pending_buf[e.l_buf+e.last_lit]=255&r,e.last_lit++,0===t?e.dyn_ltree[2*r]++:(e.matches++,t--,e.dyn_ltree[2*(ue[r]+X+1)]++,e.dyn_dtree[2*i(t)]++),e.last_lit===e.lit_bufsize-1}var j=e("../utils/common"),E=4,B=0,O=1,L=2,U=0,I=1,D=2,N=3,P=258,M=29,X=256,F=X+1+M,J=30,W=19,Q=2*F+1,V=15,G=16,$=7,Z=256,K=16,Y=17,ee=18,te=[0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0],re=[0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13],ae=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,7],ne=[16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15],se=512,ie=new Array(2*(F+2));a(ie);var oe=new Array(2*J);a(oe);var le=new Array(se);a(le);var ue=new Array(P-N+1);a(ue);var he=new Array(M);a(he);var de=new Array(J);a(de);var ce,fe,me,_e=!1;r._tr_init=S,r._tr_stored_block=C,r._tr_flush_block=H,r._tr_tally=T,r._tr_align=R},{"../utils/common":1}],8:[function(e,t,r){"use strict";function a(){this.input=null,this.next_in=0,this.avail_in=0,this.total_in=0,this.output=null,this.next_out=0,this.avail_out=0,this.total_out=0,this.msg="",this.state=null,this.data_type=2,this.adler=0}t.exports=a},{}],"/lib/deflate.js":[function(e,t,r){"use strict";function a(e){if(!(this instanceof a))return new a(e);this.options=l.assign({level:b,method:v,chunkSize:16384,windowBits:15,memLevel:8,strategy:w,to:""},e||{});var t=this.options;t.raw&&t.windowBits>0?t.windowBits=-t.windowBits:t.gzip&&t.windowBits>0&&t.windowBits<16&&(t.windowBits+=16),this.err=0,this.msg="",this.ended=!1,this.chunks=[],this.strm=new d,this.strm.avail_out=0;var r=o.deflateInit2(this.strm,t.level,t.method,t.windowBits,t.memLevel,t.strategy);if(r!==_)throw new Error(h[r]);if(t.header&&o.deflateSetHeader(this.strm,t.header),t.dictionary){var n;if(n="string"==typeof t.dictionary?u.string2buf(t.dictionary):"[object ArrayBuffer]"===c.call(t.dictionary)?new Uint8Array(t.dictionary):t.dictionary,r=o.deflateSetDictionary(this.strm,n),r!==_)throw new Error(h[r]);this._dict_set=!0}}function n(e,t){var r=new a(t);if(r.push(e,!0),r.err)throw r.msg||h[r.err];return r.result}function s(e,t){return t=t||{},t.raw=!0,n(e,t)}function i(e,t){return t=t||{},t.gzip=!0,n(e,t)}var o=e("./zlib/deflate"),l=e("./utils/common"),u=e("./utils/strings"),h=e("./zlib/messages"),d=e("./zlib/zstream"),c=Object.prototype.toString,f=0,m=4,_=0,p=1,g=2,b=-1,w=0,v=8;a.prototype.push=function(e,t){var r,a,n=this.strm,s=this.options.chunkSize;if(this.ended)return!1;a=t===~~t?t:t===!0?m:f,"string"==typeof e?n.input=u.string2buf(e):"[object ArrayBuffer]"===c.call(e)?n.input=new Uint8Array(e):n.input=e,n.next_in=0,n.avail_in=n.input.length;do{if(0===n.avail_out&&(n.output=new l.Buf8(s),n.next_out=0,n.avail_out=s),r=o.deflate(n,a),r!==p&&r!==_)return this.onEnd(r),this.ended=!0,!1;0!==n.avail_out&&(0!==n.avail_in||a!==m&&a!==g)||("string"===this.options.to?this.onData(u.buf2binstring(l.shrinkBuf(n.output,n.next_out))):this.onData(l.shrinkBuf(n.output,n.next_out)))}while((n.avail_in>0||0===n.avail_out)&&r!==p);return a===m?(r=o.deflateEnd(this.strm),this.onEnd(r),this.ended=!0,r===_):a!==g||(this.onEnd(_),n.avail_out=0,!0)},a.prototype.onData=function(e){this.chunks.push(e)},a.prototype.onEnd=function(e){e===_&&("string"===this.options.to?this.result=this.chunks.join(""):this.result=l.flattenChunks(this.chunks)),this.chunks=[],this.err=e,this.msg=this.strm.msg},r.Deflate=a,r.deflate=n,r.deflateRaw=s,r.gzip=i},{"./utils/common":1,"./utils/strings":2,"./zlib/deflate":5,"./zlib/messages":6,"./zlib/zstream":8}]},{},[])("/lib/deflate.js")}),function(){var e=window.Locksmith={},t=document.querySelector('script[type="application/vnd.locksmith+json"]'),r=t&&t.innerHTML;if(e.state={},e.util={},r)try{e.state=JSON.parse(r)}catch(a){}if(document.addEventListener&&document.querySelector){var n,s,i,o=[76,79,67,75,83,77,73,84,72,49,49],l=function(){s=o.slice(0)},u="style",h=function(e){e&&27!==e.keyCode&&"click"!==e.type||(document.removeEventListener("keydown",h),document.removeEventListener("click",h),n&&document.body.removeChild(n),n=null)};l(),document.addEventListener("keyup",function(e){if(e.keyCode===s[0]){if(clearTimeout(i),s.shift(),s.length>0)return void(i=setTimeout(l,1e3));l(),h(),n=document.createElement("div"),n[u].width="50%",n[u].maxWidth="500px",n[u].height="35%",n[u].border="1px rgba(0, 0, 0, 0.2) solid",n[u].background="rgba(255, 255, 255, 0.99)",n[u].borderRadius="2px",n[u].position="fixed",n[u].top="50%",n[u].left="50%",n[u].transform="translateY(-50%) translateX(-50%)",n[u].boxShadow="0 2px 5px rgba(0, 0, 0, 0.3), 0 0 100px 500px rgba(255, 255, 255, 0.87)",n[u].zIndex="2147483645";var t=document.createElement("textarea");t.value=r,t[u].border="none",t[u].display="block",t[u].boxSizing="border-box",t[u].width="100%",t[u].height="100%",t[u].background="transparent",t[u].padding="10px",t[u].fontFamily="monospace",t[u].fontSize="13px",t[u].color="#333",t[u].resize="none",t[u].outline="none",t.readOnly=!0,n.appendChild(t),t.addEventListener("click",function(e){e.stopImmediatePropagation(),t.select()}),document.body.appendChild(n),t.select(),document.addEventListener("keydown",h),document.addEventListener("click",h)}})}e.path=e.state.path||window.location.pathname,e.customer=e.state.customer,e.token=null,e.basePath="/apps/locksmith",e.util.withToken=function(t){e.token?t(e.token):reqwest({url:"https://uselocksmith.com/proxy/token?shop=us-store-marqueofbrands.myshopify.com",type:"html",crossOrigin:!0,success:function(r){e.token=r,t(r)}})},e.util.makeUrl=function(t,r,a){var n,s=e.basePath+t,i=[],o=e.util.cache();for(n in o)i.push(n+"="+encodeURIComponent(o[n]));for(n in r)i.push(n+"="+encodeURIComponent(r[n]));i.push("customer_id="+encodeURIComponent(e.customer.id)),i.push("customer_email="+encodeURIComponent(e.customer.email)),e.util.withToken(function(e){i.push("token="+e),s=s+(-1===s.indexOf("?")?"?":"&")+i.join("&"),a(s)})},e.util.cache=function(e){var t={};try{var r=function(e){return(document.cookie.match("(^|; )"+e+"=([^;]*)")||0)[2]};t=JSON.parse(decodeURIComponent(r("locksmith-params")||"{}"))}catch(a){}if(e){for(var n in e)t[n]=e[n];document.cookie="locksmith-params=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/",document.cookie="locksmith-params="+encodeURIComponent(JSON.stringify(t))+"; path=/"}return t},e.util.spinnerHTML='<style>.spinner{-webkit-animation:spinner 1s infinite ease;animation:spinner 1s infinite ease;border-radius:50%;font-size:6px;height:1.5em;margin:40px auto 50px;position:relative;text-indent:-9999em;-webkit-transform:translateZ(0);transform:translateZ(0);width:1.5em}@-webkit-keyframes spinner{0%,100%{box-shadow:0 -2.6em 0 0 #fff,1.8em -1.8em 0 0 rgba(85,85,85,.2),2.5em 0 0 0 rgba(85,85,85,.2),1.75em 1.75em 0 0 rgba(85,85,85,.2),0 2.5em 0 0 rgba(85,85,85,.2),-1.8em 1.8em 0 0 rgba(85,85,85,.2),-2.6em 0 0 0 rgba(85,85,85,.5),-1.8em -1.8em 0 0 rgba(85,85,85,.7)}12.5%{box-shadow:0 -2.6em 0 0 rgba(85,85,85,.7),1.8em -1.8em 0 0 #fff,2.5em 0 0 0 rgba(85,85,85,.2),1.75em 1.75em 0 0 rgba(85,85,85,.2),0 2.5em 0 0 rgba(85,85,85,.2),-1.8em 1.8em 0 0 rgba(85,85,85,.2),-2.6em 0 0 0 rgba(85,85,85,.2),-1.8em -1.8em 0 0 rgba(85,85,85,.5)}25%{box-shadow:0 -2.6em 0 0 rgba(85,85,85,.5),1.8em -1.8em 0 0 rgba(85,85,85,.7),2.5em 0 0 0 #fff,1.75em 1.75em 0 0 rgba(85,85,85,.2),0 2.5em 0 0 rgba(85,85,85,.2),-1.8em 1.8em 0 0 rgba(85,85,85,.2),-2.6em 0 0 0 rgba(85,85,85,.2),-1.8em -1.8em 0 0 rgba(85,85,85,.2)}37.5%{box-shadow:0 -2.6em 0 0 rgba(85,85,85,.2),1.8em -1.8em 0 0 rgba(85,85,85,.5),2.5em 0 0 0 rgba(85,85,85,.7),1.75em 1.75em 0 0 #fff,0 2.5em 0 0 rgba(85,85,85,.2),-1.8em 1.8em 0 0 rgba(85,85,85,.2),-2.6em 0 0 0 rgba(85,85,85,.2),-1.8em -1.8em 0 0 rgba(85,85,85,.2)}50%{box-shadow:0 -2.6em 0 0 rgba(85,85,85,.2),1.8em -1.8em 0 0 rgba(85,85,85,.2),2.5em 0 0 0 rgba(85,85,85,.5),1.75em 1.75em 0 0 rgba(85,85,85,.7),0 2.5em 0 0 #fff,-1.8em 1.8em 0 0 rgba(85,85,85,.2),-2.6em 0 0 0 rgba(85,85,85,.2),-1.8em -1.8em 0 0 rgba(85,85,85,.2)}62.5%{box-shadow:0 -2.6em 0 0 rgba(85,85,85,.2),1.8em -1.8em 0 0 rgba(85,85,85,.2),2.5em 0 0 0 rgba(85,85,85,.2),1.75em 1.75em 0 0 rgba(85,85,85,.5),0 2.5em 0 0 rgba(85,85,85,.7),-1.8em 1.8em 0 0 #fff,-2.6em 0 0 0 rgba(85,85,85,.2),-1.8em -1.8em 0 0 rgba(85,85,85,.2)}75%{box-shadow:0 -2.6em 0 0 rgba(85,85,85,.2),1.8em -1.8em 0 0 rgba(85,85,85,.2),2.5em 0 0 0 rgba(85,85,85,.2),1.75em 1.75em 0 0 rgba(85,85,85,.2),0 2.5em 0 0 rgba(85,85,85,.5),-1.8em 1.8em 0 0 rgba(85,85,85,.7),-2.6em 0 0 0 #fff,-1.8em -1.8em 0 0 rgba(85,85,85,.2)}87.5%{box-shadow:0 -2.6em 0 0 rgba(85,85,85,.2),1.8em -1.8em 0 0 rgba(85,85,85,.2),2.5em 0 0 0 rgba(85,85,85,.2),1.75em 1.75em 0 0 rgba(85,85,85,.2),0 2.5em 0 0 rgba(85,85,85,.2),-1.8em 1.8em 0 0 rgba(85,85,85,.5),-2.6em 0 0 0 rgba(85,85,85,.7),-1.8em -1.8em 0 0 #fff}}@keyframes spinner{0%,100%{box-shadow:0 -2.6em 0 0 #fff,1.8em -1.8em 0 0 rgba(85,85,85,.2),2.5em 0 0 0 rgba(85,85,85,.2),1.75em 1.75em 0 0 rgba(85,85,85,.2),0 2.5em 0 0 rgba(85,85,85,.2),-1.8em 1.8em 0 0 rgba(85,85,85,.2),-2.6em 0 0 0 rgba(85,85,85,.5),-1.8em -1.8em 0 0 rgba(85,85,85,.7)}12.5%{box-shadow:0 -2.6em 0 0 rgba(85,85,85,.7),1.8em -1.8em 0 0 #fff,2.5em 0 0 0 rgba(85,85,85,.2),1.75em 1.75em 0 0 rgba(85,85,85,.2),0 2.5em 0 0 rgba(85,85,85,.2),-1.8em 1.8em 0 0 rgba(85,85,85,.2),-2.6em 0 0 0 rgba(85,85,85,.2),-1.8em -1.8em 0 0 rgba(85,85,85,.5)}25%{box-shadow:0 -2.6em 0 0 rgba(85,85,85,.5),1.8em -1.8em 0 0 rgba(85,85,85,.7),2.5em 0 0 0 #fff,1.75em 1.75em 0 0 rgba(85,85,85,.2),0 2.5em 0 0 rgba(85,85,85,.2),-1.8em 1.8em 0 0 rgba(85,85,85,.2),-2.6em 0 0 0 rgba(85,85,85,.2),-1.8em -1.8em 0 0 rgba(85,85,85,.2)}37.5%{box-shadow:0 -2.6em 0 0 rgba(85,85,85,.2),1.8em -1.8em 0 0 rgba(85,85,85,.5),2.5em 0 0 0 rgba(85,85,85,.7),1.75em 1.75em 0 0 #fff,0 2.5em 0 0 rgba(85,85,85,.2),-1.8em 1.8em 0 0 rgba(85,85,85,.2),-2.6em 0 0 0 rgba(85,85,85,.2),-1.8em -1.8em 0 0 rgba(85,85,85,.2)}50%{box-shadow:0 -2.6em 0 0 rgba(85,85,85,.2),1.8em -1.8em 0 0 rgba(85,85,85,.2),2.5em 0 0 0 rgba(85,85,85,.5),1.75em 1.75em 0 0 rgba(85,85,85,.7),0 2.5em 0 0 #fff,-1.8em 1.8em 0 0 rgba(85,85,85,.2),-2.6em 0 0 0 rgba(85,85,85,.2),-1.8em -1.8em 0 0 rgba(85,85,85,.2)}62.5%{box-shadow:0 -2.6em 0 0 rgba(85,85,85,.2),1.8em -1.8em 0 0 rgba(85,85,85,.2),2.5em 0 0 0 rgba(85,85,85,.2),1.75em 1.75em 0 0 rgba(85,85,85,.5),0 2.5em 0 0 rgba(85,85,85,.7),-1.8em 1.8em 0 0 #fff,-2.6em 0 0 0 rgba(85,85,85,.2),-1.8em -1.8em 0 0 rgba(85,85,85,.2)}75%{box-shadow:0 -2.6em 0 0 rgba(85,85,85,.2),1.8em -1.8em 0 0 rgba(85,85,85,.2),2.5em 0 0 0 rgba(85,85,85,.2),1.75em 1.75em 0 0 rgba(85,85,85,.2),0 2.5em 0 0 rgba(85,85,85,.5),-1.8em 1.8em 0 0 rgba(85,85,85,.7),-2.6em 0 0 0 #fff,-1.8em -1.8em 0 0 rgba(85,85,85,.2)}87.5%{box-shadow:0 -2.6em 0 0 rgba(85,85,85,.2),1.8em -1.8em 0 0 rgba(85,85,85,.2),2.5em 0 0 0 rgba(85,85,85,.2),1.75em 1.75em 0 0 rgba(85,85,85,.2),0 2.5em 0 0 rgba(85,85,85,.2),-1.8em 1.8em 0 0 rgba(85,85,85,.5),-2.6em 0 0 0 rgba(85,85,85,.7),-1.8em -1.8em 0 0 #fff}}</style><div class="spinner"></div>',e.util.clobberBody=function(e){document.body.innerHTML=e},e.util.clobberDocument=function(e){e.responseText&&(e=e.responseText),document.documentElement&&document.removeChild(document.documentElement);var t=document.open("text/html","replace");t.writeln(e),t.close(),setTimeout(function(){var e=t.querySelector("[autofocus]");e&&e.focus()},100)},e.util.serializeForm=function(e){if(e&&"FORM"===e.nodeName){var t,r,a={};for(t=e.elements.length-1;t>=0;t-=1)if(""!==e.elements[t].name)switch(e.elements[t].nodeName){case"INPUT":switch(e.elements[t].type){default:case"text":case"hidden":case"password":case"button":case"reset":case"submit":a[e.elements[t].name]=e.elements[t].value;break;case"checkbox":case"radio":e.elements[t].checked&&(a[e.elements[t].name]=e.elements[t].value);break;case"file":}break;case"TEXTAREA":a[e.elements[t].name]=e.elements[t].value;break;case"SELECT":switch(e.elements[t].type){case"select-one":a[e.elements[t].name]=e.elements[t].value;break;case"select-multiple":for(r=e.elements[t].options.length-1;r>=0;r-=1)e.elements[t].options[r].selected&&(a[e.elements[t].name]=e.elements[t].options[r].value)}break;case"BUTTON":switch(e.elements[t].type){case"reset":case"submit":case"button":a[e.elements[t].name]=e.elements[t].value}}return a}},e.util.on=function(e,t,r){var a="locksmith-"+e+t,n=function(e){-1===e.target.className.split(/\s+/).indexOf(t)||e[a]||(e[a]=!0,r(e))};document.attachEvent?document.attachEvent(e,n):document.addEventListener(e,n,!1)};var d={};e.getState=function(t,r,a){var n=t+JSON.stringify(r);e.util.makeUrl(t,r,function(e){reqwest({url:e,method:"get",type:"html",error:function(e){throw console.error(e),alert("Something went wrong! Please refresh and try again."),e},success:function(e){d[n]=e;var t=e.match(/<script type="application\/vnd\.locksmith\+json">\s*([^]+?)\s*<\/script>/);a(t?JSON.parse(t[1]):{})}})})},e.get=function(t,r,a){a&&a.spinner===!1||e.util.clobberBody(e.util.spinnerHTML);var n=t+JSON.stringify(r);return d[n]?void e.util.clobberDocument(d[n]):void e.util.makeUrl(t,r,function(t){reqwest({url:t,method:"get",type:"html",error:function(e){throw console.error(e),alert("Something went wrong! Please refresh and try again."),e},success:function(t){d[n]=t,e.util.clobberDocument(t)}})})},e.post=function(t,r,a){a&&a.spinner===!1||e.util.clobberBody(e.util.spinnerHTML),e.util.makeUrl(t,{},function(t){reqwest({url:t,method:"post",type:"html",data:r,error:function(e){throw console.error(e),alert("Something went wrong! Please refresh and try again."),e},success:e.util.clobberDocument})})},e.getResourceState=function(t){e.getState("/resource",{path:e.path,search:window.location.search},t)},e.getResource=function(t){e.get("/resource",{path:e.path,search:window.location.search},t)},e.postResource=function(t,r){t.locksmith_source?"undefined"!=typeof localStorage?(localStorage.setItem("_locksmith_source",t.locksmith_source),localStorage.setItem("_locksmith_signature",t.locksmith_signature)):(window._locksmith_source=t.locksmith_source,window._locksmith_signature=t.locksmith_signature):"undefined"!=typeof localStorage?(t.locksmith_source=localStorage.getItem("_locksmith_source"),t.locksmith_signature=localStorage.getItem("_locksmith_signature")):(t.locksmith_source=window._locksmith_source,t.locksmith_signature=window._locksmith_signature),t.path=e.path,t.search=window.location.search,e.post("/resource",t,r)}}();</script>{%- endcapture%}{%capture locksmith_customer_register_form%}{%if _1.customer_accounts_enabled%}
+        <script src="//cdn.shopify.com/s/assets/themes_support/shopify_common-560aead139dc90d812ab2864e525084f7410876b146af25d903c665092c98dc0.js" type="text/javascript"></script><script src="//cdn.shopify.com/s/assets/themes_support/customer_area-9c8d9688a815ed8c8e93bbdd8c6c89ed98f008ea2cac0324587ea3cccf4ce98c.js" type="text/javascript"></script><script src="//cdn.shopify.com/s/files/1/1649/3353/t/3/assets/jquery.form-validator.min.js?11695251162099741374" type="text/javascript"></script>
+{%comment%}
+  This template will be automatically generated for you if the file doesn't exist,
+  but where's the fun in having no control? Define your layout below.
+
+  The 'layout settings.customer_layout' line is inserted at the top of every customer account template.
+  Your theme's settings determine to use the 'default' or 'theme' customer templates.
+  More info:
+    - http://www.tetchi.ca/shopify-theme-from-scratch-part-11/
+
+  Template note:
+    - All IDs on this template are required to make the forms submit properly
+    - There are two instances of inline JS below. Best practices advise separating this
+      into an external JS file.
+{%endcomment%}{%layout settings.customer_layout%}{{'jquery.form-validator.min.js'|asset_url|script_tag}}  
+
+<div class="register-page" id="mob-login-page">
+{%comment%}
+    If a user has successfully requested a new password, the form.posted_successfully? variable
+    is set to true within the 'recover_customer_password' form only. Within that form you'll see
+    us assign a variable 'reset_success' to true, which is used in JS to show our success message.
+{%endcomment%}
+
+  <header class="mob-login-header row">
+    <div class="col-sm-6 hidden-xs ipad">
+{{'ipad.png'|asset_url|img_tag}}
+    </div>
+    <div class="col-sm-6 col-xs-12 brands">
+      <h2>One Account<br>For all these amazing<br>brands</h2>
+{{'brand-logos.png'|asset_url|img_tag:'Brand Logos', 'brand-logos'}}
+      <p>Sign in OR Sign up below</p>
+    </div>
+  </header>
+  
+  <section class="mob-forms-section">
+    <div class="forms-container">
+      <div id="create-account-buttons" class="create-account-buttons">
+        <h3>Or Create an account {{'for-hot-deal.png'|asset_url|img_tag}}</h3>
+        <div class="row create-buttons">
+          <div class="col-sm-4 col-xs-12">
+{{'self-tanners.jpg'|asset_url|img_tag}}
+            <h3>Self tanners</h3>
+            <ul>
+              <li>VIP customer status</li>
+              <li>Access to great deals</li>
+              <li>Promotions from your favourite brands</li>
+            </ul>
+            <a href="#create-self-tanners-account-start" onclick="showRetailSignupFormForm();" class="btn">Create account</a>
+          </div>
+          <div class="col-sm-4 col-xs-12">
+{{'trade-pros.jpg'|asset_url|img_tag}}
+            <h3>Trade pros</h3>
+            <ul>
+              <li>View trade pricing</li>
+              <li>Access to great deals</li>
+              <li>Promotions from your favourite brands</li>
+            </ul>
+            <a href="#create-trade-pros-account-start" onclick="showProSignupFormForm();" class="btn">Create account</a>
+          </div>
+          <div class="col-sm-4 col-xs-12">
+{{'distributor.jpg'|asset_url|img_tag}}
+            <h3>Wholesalers</h3>
+            <ul>
+              <li>View distributor pricing</li>
+              <li>Access to great deals</li>
+              <li>Save time & order online easily</li>
+            </ul>
+            <a href="#create-wholesalers-account-start" onclick="showWholeSaleSignupFormForm();" class="btn">Create account</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="create-self-tanners-account" style="display: none;">
+        <div class="create-account-buttons">
+          <h3>Or Create an account {{'for-hot-deal.png'|asset_url|img_tag}}</h3>
+          <div class="row create-buttons">
+            <div class="col-sm-4 col-xs-12 active">
+{{'self-tanners.jpg'|asset_url|img_tag}}
+              <h3>Self tanners</h3>
+              <ul>
+                <li>VIP customer status</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-self-tanners-account-start" onclick="showRetailSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 none-active">
+{{'trade-pros.jpg'|asset_url|img_tag}}
+              <h3>Trade pros</h3>
+              <ul>
+                <li>View trade pricing</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-trade-pros-account-start" onclick="showProSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 none-active">
+{{'distributor.jpg'|asset_url|img_tag}}
+              <h3>Wholesalers</h3>
+              <ul>
+                <li>View distributor pricing</li>
+                <li>Access to great deals</li>
+                <li>Save time & order online easily</li>
+              </ul>
+              <a href="#create-wholesalers-account-start" onclick="showWholeSaleSignupFormForm();" class="btn">Create account</a>
+            </div>
+          </div>
+        </div>
+        <h3 id="create-self-tanners-account-start">Create your account & access all our amazing brands</h3>
+{%comment%}
+          This form must use 'create_customer'
+{%endcomment%}{%form 'create_customer'%}{%include 'form-errors-custom'%}
+        
+        <input type="hidden" value="{{settings.store_country}}" name="customer[note][country]">
+        <input type="hidden" value="Self Tanners" name="customer[note][customer_type]">
+        <input type="hidden" id="customer_tags" name="customer[tags]" value="Self Tanners"/>
+        
+        <div id="first_name">
+          <label for="first_name">First Name<em>*</em></label>
+          <input type="text" value="" name="customer[first_name]" id="first_name" {%if form.errors contains "first_name"%} class="error"{%endif%} data-validation="required">
+        </div>
+        
+        <div id="last_name">
+          <label for="last_name">Last Name<em>*</em></label>
+          <input type="text" value="" name="customer[last_name]" id="last_name" {%if form.errors contains "last_name"%} class="error"{%endif%} data-validation="required">
+        </div>
+        
+        <div id="email">
+          <label for="email">Email Address<em>*</em></label>
+          <input type="email" value="" name="customer[email]" id="email" {%if form.errors contains "email"%} class="error"{%endif%}  data-validation="email">
+        </div>
+        
+        <div id="create_password">
+          <label for="password">Password<em>*</em></label>
+          <input type="password" value="" name="customer[password]" id="create_password" {%if form.errors contains "password"%} class="error"{%endif%} data-validation="length" data-validation-length="min6">
+        </div>
+
+        <div id="select-brands">
+          <label>Select the Brands you would like to receive special deals from<em>*</em></label>
+          <ul class="select-brands">
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_minetan]" checked>
+{{'contact-newsletter-minetan.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_taneasy]" checked>
+{{'contact-newsletter-taneasy.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_btan]" checked>
+{{'contact-newsletter-btan.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_pure]" checked>
+{{'contact-newsletter-pure.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_plabel]" checked>
+{{'contact-newsletter-plabel.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_sttropez]" checked>
+{{'contact-newsletter-sttropez.jpg'|asset_url|img_tag}}
+            </li>
+          </ul>
+        </div>
+        
+        <div class="action-btn">
+          <p><input type="submit" value="Create an Account" class="btn"></p>
+        </div>
+        <input type="hidden" id="register_return_to" name="return_to" value="" />{%endform%}
+      </div>
+
+      <div id="create-trade-pros-account" style="display: none;">
+        <div class="create-account-buttons">
+          <h3>Or Create an account {{'for-hot-deal.png'|asset_url|img_tag}}</h3>
+          <div class="row create-buttons">
+            <div class="col-sm-4 col-xs-12 none-active">
+{{'self-tanners.jpg'|asset_url|img_tag}}
+              <h3>Self tanners</h3>
+              <ul>
+                <li>VIP customer status</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-self-tanners-account-start" onclick="showRetailSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 active">
+{{'trade-pros.jpg'|asset_url|img_tag}}
+              <h3>Trade pros</h3>
+              <ul>
+                <li>View trade pricing</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-trade-pros-account-start" onclick="showProSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 none-active">
+{{'distributor.jpg'|asset_url|img_tag}}
+              <h3>Wholesalers</h3>
+              <ul>
+                <li>View distributor pricing</li>
+                <li>Access to great deals</li>
+                <li>Save time & order online easily</li>
+              </ul>
+              <a href="#create-wholesalers-account-start" onclick="showWholeSaleSignupFormForm();" class="btn">Create account</a>
+            </div>
+          </div>
+        </div>
+        <h3 id="create-trade-pros-account-start">Create your pro account & access all our amazing brands</h3>
+{%comment%}
+          This form must use 'create_customer'
+{%endcomment%}{%form 'create_customer'%}{%include 'form-errors-custom'%}
+        
+        <input type="hidden" value="{{settings.store_country}}" name="customer[note][country]">
+        <input type="hidden" value="Trade Pros" name="customer[note][customer_type]">
+        <input type="hidden" id="customer_tags" name="customer[tags]" value="Trade Pros"/>
+        
+        <div id="first_name">
+          <label for="first_name">First Name<em>*</em></label>
+          <input type="text" value="" name="customer[first_name]" id="first_name" {%if form.errors contains "first_name"%} class="error"{%endif%} data-validation="required">
+        </div>
+        
+        <div id="last_name">
+          <label for="last_name">Last Name<em>*</em></label>
+          <input type="text" value="" name="customer[last_name]" id="last_name" {%if form.errors contains "last_name"%} class="error"{%endif%} data-validation="required">
+        </div>
+        
+        <div id="email">
+          <label for="email">Email Address<em>*</em></label>
+          <input type="email" value="" name="customer[email]" id="email" {%if form.errors contains "email"%} class="error"{%endif%}  data-validation="email">
+        </div>
+
+        <div id="business">
+          <label for="business">Business Name</label>
+          <input type="text" value="" name="customer[note][business_name]" id="business">
+        </div>
+
+        <div id="business_number">
+          <label for="business_number">Business Registration Number</label>
+          <input type="text" value="" name="customer[note][business_registration_number]" id="business_number">
+        </div>
+
+        <div id="phone">
+          <label for="phone">Phone Number</label>
+          <input type="text" value="" name="customer[note][phone_number]" id="phone">
+        </div>
+        
+        <div id="create_password">
+          <label for="password">Password<em>*</em></label>
+          <input type="password" value="" name="customer[password]" id="create_password" {%if form.errors contains "password"%} class="error"{%endif%} data-validation="required">
+        </div>
+
+        <div id="select-brands">
+          <label>Select the Brands you would like to receive special deals from<em>*</em></label>
+          <ul class="select-brands">
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_minetan]" checked>
+{{'contact-newsletter-minetan.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_taneasy]" checked>
+{{'contact-newsletter-taneasy.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_btan]" checked>
+{{'contact-newsletter-btan.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_pure]" checked>
+{{'contact-newsletter-pure.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_plabel]" checked>
+{{'contact-newsletter-plabel.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_sttropez]" checked>
+{{'contact-newsletter-sttropez.jpg'|asset_url|img_tag}}
+            </li>
+          </ul>
+        </div>
+        
+        <div class="action-btn">
+          <p><input type="submit" value="Create an Account" class="btn"></p>
+        </div>
+        <input type="hidden" id="register_return_to" name="return_to" value="" />{%endform%}
+      </div>
+
+      <div id="create-wholesalers-account" style="display: none;">
+        <div class="create-account-buttons">
+          <h3>Or Create an account {{'for-hot-deal.png'|asset_url|img_tag}}</h3>
+          <div class="row create-buttons">
+            <div class="col-sm-4 col-xs-12 none-active">
+{{'self-tanners.jpg'|asset_url|img_tag}}
+              <h3>Self tanners</h3>
+              <ul>
+                <li>VIP customer status</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-self-tanners-account-start" onclick="showRetailSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 none-active">
+{{'trade-pros.jpg'|asset_url|img_tag}}
+              <h3>Trade pros</h3>
+              <ul>
+                <li>View trade pricing</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-trade-pros-account-start" onclick="showProSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 active">
+{{'distributor.jpg'|asset_url|img_tag}}
+              <h3>Wholesalers</h3>
+              <ul>
+                <li>View distributor pricing</li>
+                <li>Access to great deals</li>
+                <li>Save time & order online easily</li>
+              </ul>
+              <a href="#create-wholesalers-account-start" onclick="showWholeSaleSignupFormForm();" class="btn">Create account</a>
+            </div>
+          </div>
+        </div>
+        <h3 id="create-wholesalers-account-start">Request a distribution account for all our amazing brands</h3>
+{%form 'contact'%}{%comment%}
+          Successful message
+{%endcomment%}{%if form.posted_successfully?%}
+        <p class="note form-success">
+          Success! Your enquiry has been submitted. We'll get back to you as soon as possible.
+        </p>
+{%endif%}{%include 'form-errors-custom'%}
+          
+        <div id="contactFormWrapper">
+          <div>
+            <label for="contactFormName">Name<em>*</em></label>
+            <input type="text" id="contactFormName" name="contact[name]" autocapitalize="words" placeholder="{{settings.contact_your_name}}" data-validation="required">
+          </div>
+          
+          <div>
+            <label for="contactFormEmail">Email<em>*</em></label>
+            <input type="email" name="contact[email]" id="contactFormEmail" autocorrect="off" autocapitalize="off" placeholder="{{settings.contact_your_email}}" data-validation="email">
+          </div>
+
+          <div>
+            <label for="contactFormBusinessName">Business Name<em>*</em></label>
+            <input type="text" name="contact[business_name]" id="contactFormBusinessName" autocorrect="off" autocapitalize="off" data-validation="required">
+          </div>
+
+          <div>
+            <label for="contactFormBusinessNumber">Business Registration Number</label>
+            <input type="text" name="contact[business_registration_number]" id="contactFormBusinessNumber" autocorrect="off" autocapitalize="off">
+          </div>
+
+          <div>
+            <label for="contactFormPhone">Phone Number<em>*</em></label>
+            <input type="tel" name="contact[phone]" id="contactFormPhone" pattern="[0-9]*" placeholder="{{settings.contact_phone_number}}" data-validation="required">
+          </div>
+          
+          <input type="hidden" name="contact[body]" id="contactFormMessage" value="Request a distribute account">
+          
+          <div class="action-btn">
+            <p><input type="submit" value="Enquire" class="btn"></p>
+          </div>
+        </div>
+        <input type="hidden" id="register_return_to" name="return_to" value="" />{%endform%}
+      </div>
+
+      <p class="line"></p>
+
+      <div class="note form-success" id="resetSuccess" style="display:none;">
+        We've sent you an email with a link to update your password.
+      </div>
+{%comment%}
+        This form must use 'customer_login'
+{%endcomment%}{%form 'customer_login'%}
+      <h3>SIGN IN</h3>
+{%include 'form-errors-custom'%}
+      <div id="email">
+        <label for="customer_email">Email Address<em>*</em></label>
+        <input type="email" value="" name="customer[email]" id="customer_email" {%if form.errors contains "email"%} class="error"{%endif%} data-validation="required">
+      </div>
+{%if form.password_needed%}
+      <div id="password">
+        <label for="customer_password">Password<em>*</em></label>
+        <input type="password" value="" name="customer[password]" id="customer_password" {%if form.errors contains "password"%} class="error"{%endif%} data-validation="required">
+      </div>
+{%endif%}
+      
+      <div class="action-btn">
+        <p><input type="submit" class="btn" value="Login"></p>
+        <p class="last">
+          <a href="#" onclick="showRecoverPasswordForm();return false;">Forgot your password?</a>
+        </p>
+      </div>
+      <input type="hidden" id="register_return_to" name="return_to" value="" />{%endform%}{%comment%}
+        This page uses JavaScript to show/hide the recover password form
+{%endcomment%}
+      <div id="recover_password" style="display: none;">
+        <h3>Reset your password</h3>
+        <p>We will send you an email to reset your password.</p>
+{%comment%}
+          This form must use 'recover_customer_password'
+{%endcomment%}{%form 'recover_customer_password'%}{%include 'form-errors-custom'%}{%comment%}
+          form.posted_successfully? is true only inside this form, but we want
+          to show a success message outside of it. To do so, set the variable
+          reset_success to true, then use JS to show our success message above.
+{%endcomment%}{%if form.posted_successfully?%}{%assign reset_success = true%}{%endif%}
+        
+        <label for="recover-email">Email</label>
+        <input type="email" value="" name="email" id="recover-email" placeholder="your-email@shopify.com" data-validation="required">
+        
+        <div class="action-btn">
+          <p><input type="submit" class="btn" value="Submit"></p>
+          or <a href="#" onclick="hideRecoverPasswordForm();return false;">Cancel</a>
+        </div>
+        <input type="hidden" id="register_return_to" name="return_to" value="" />{%endform%}{%comment%}
+          If accounts are set as optional, the following will be shown as an option
+          during checkout, not on the default /login page.
+{%endcomment%}{%if _1.checkout.guest_login%}
+        <hr>
+        <h2>Continue as a guest</h2>
+{%form 'guest_login'%}
+        <input type="submit" class="btn" value="Let's go">
+        <input type="hidden" id="register_return_to" name="return_to" value="" />{%endform%}{%endif%}
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  /*
+    Show/hide the recover password form when requested.
+    I'd suggest using some CSS3 transitions to make this change look cool,
+    but this gets the job done for now.
+  */
+  function showRecoverPasswordForm() {
+    document.getElementById('recover_password').style.display = 'block';
+    document.getElementById('customer_login').style.display='none';
+  }
+
+  function hideRecoverPasswordForm() {
+    document.getElementById('recover_password').style.display = 'none';
+    document.getElementById('customer_login').style.display = 'block';
+  }
+
+  function showRetailSignupFormForm() {
+    document.getElementById('create-self-tanners-account').style.display = 'block';
+    document.getElementById('create-account-buttons').style.display = 'none';
+    document.getElementById('create-trade-pros-account').style.display = 'none';
+    document.getElementById('create-wholesalers-account').style.display = 'none';
+  }
+
+  function showProSignupFormForm() {
+    document.getElementById('create-trade-pros-account').style.display = 'block';
+    document.getElementById('create-self-tanners-account').style.display = 'none';
+    document.getElementById('create-account-buttons').style.display = 'none';
+    document.getElementById('create-wholesalers-account').style.display = 'none';
+  }
+
+  function showWholeSaleSignupFormForm() {
+    document.getElementById('create-wholesalers-account').style.display = 'block';
+    document.getElementById('create-trade-pros-account').style.display = 'none';
+    document.getElementById('create-self-tanners-account').style.display = 'none';
+    document.getElementById('create-account-buttons').style.display = 'none';
+  }
+
+  // Allow deep linking to the recover password form
+  if (window.location.hash == '#recover') { showRecoverPasswordForm() }
+  if (window.location.hash == '#create-self-tanners-account-start') { showRetailSignupFormForm() }
+  if (window.location.hash == '#create-trade-pros-account-start') { showProSignupFormForm() }
+  if (window.location.hash == '#create-wholesalers-account-start') { showWholeSaleSignupFormForm() }
+
+  // reset_success is only true when the reset form is
+{%if reset_success%}
+    document.getElementById('resetSuccess').style.display = 'block';
+{%endif%}
+</script>
+
+<script>
+  $(document).ready(function($) {
+    var url = window.location.href.toLowerCase();
+
+    if (url.indexOf("uk.store") >= 0 || url.indexOf("store-minetanbodyskin") >= 0) {
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_sttropez]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_sttropez]"]').prop('checked', false);
+
+      $('#create-trade-pros-account input[name="customer[note][deal_from_sttropez]"]').parent().hide();
+      $('#create-trade-pros-account input[name="customer[note][deal_from_sttropez]"]').prop('checked', false);
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+    }
+    if (url.indexOf("us.store") >= 0 || url.indexOf("us-store") >= 0) {
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+    }
+    if (url.indexOf("eu.store") >= 0 || url.indexOf("eu-store") >= 0) {
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_sttropez]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_sttropez]"]').prop('checked', false);
+      
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+      $('#create-trade-pros-account input[name="customer[note][deal_from_sttropez]"]').parent().hide();
+      $('#create-trade-pros-account input[name="customer[note][deal_from_sttropez]"]').prop('checked', false);
+    }
+    if (url.indexOf("au.store") >= 0 || url.indexOf("au-store") >= 0) {
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+    }
+    $.validate();
+  });
+</script>
+
+<!-- <script>
+  $('#contact_form').submit(function(event) {
+    event.preventDefault(); //this will prevent the default submit
+    var name = $('#contactFormName').val();
+    var email = $('#contactFormEmail').val();
+    var business_name = $('#contactFormBusinessName').val();
+    var business_registration_number = $('#contactFormBusinessNumber').val();
+    var phone_number = $('#contactFormPhone').val();
+    var customer_data = {};
+
+    customer_data["name"] = name;
+    customer_data["email"] = email;
+    customer_data["business_name"] = business_name;
+    customer_data["business_registration_number"] = business_registration_number;
+    customer_data["phone_number"] = phone_number;
+
+    if (name != '' && email != '' && phone_number != '' && business_name != '') {
+      $.ajax({
+        type: 'POST',
+        url: 'http://company.marqueofbrands.com/wp-admin/admin-ajax.php?action=handle_wholesalers',
+        data: JSON.stringify(customer_data)
+      });
+    }
+    $(this).unbind('submit').submit(); // continue the submit unbind preventDefault
+  })
+</script> -->
+        <script type="text/javascript">
+          document.body.className = " template-customers-register";
+          document.body.id = "create-account";
+          window.document.title = "Create Account – Marque of Brands US";
+
+          var returnTo = window.location.protocol + '//' + window.location.host + ('{{locksmith_path}}' || window.location.pathname) + window.location.search;
+
+          if (document.getElementsByName) {
+            var nodes = document.getElementsByName('return_to');
+            for (var i = 0; i < nodes.length; i++) {
+              nodes[i].value = '{{locksmith_path}}' || window.location.pathname;
+            }
+          } else {
+            document.getElementById('register_return_to').value = returnTo;
+          }
+        </script>
+{%endif%}{%endcapture%}{%capture locksmith_customer_login_form%}{%if _1.customer_accounts_enabled%}
+        <script src="//cdn.shopify.com/s/assets/themes_support/shopify_common-560aead139dc90d812ab2864e525084f7410876b146af25d903c665092c98dc0.js" type="text/javascript"></script><script src="//cdn.shopify.com/s/assets/themes_support/customer_area-9c8d9688a815ed8c8e93bbdd8c6c89ed98f008ea2cac0324587ea3cccf4ce98c.js" type="text/javascript"></script><script src="//cdn.shopify.com/s/files/1/1649/3353/t/3/assets/jquery.form-validator.min.js?11695251162099741374" type="text/javascript"></script>
+{%comment%}
+  This template will be automatically generated for you if the file doesn't exist,
+  but where's the fun in having no control? Define your layout below.
+
+  The 'layout settings.customer_layout' line is inserted at the top of every customer account template.
+  Your theme's settings determine to use the 'default' or 'theme' customer templates.
+  More info:
+    - http://www.tetchi.ca/shopify-theme-from-scratch-part-11/
+
+  Template note:
+    - All IDs on this template are required to make the forms submit properly
+    - There are two instances of inline JS below. Best practices advise separating this
+      into an external JS file.
+{%endcomment%}{%layout settings.customer_layout%}{{'jquery.form-validator.min.js'|asset_url|script_tag}}  
+
+<div class="login-page" id="mob-login-page">
+{%comment%}
+    If a user has successfully requested a new password, the form.posted_successfully? variable
+    is set to true within the 'recover_customer_password' form only. Within that form you'll see
+    us assign a variable 'reset_success' to true, which is used in JS to show our success message.
+{%endcomment%}
+
+  <header class="mob-login-header row">
+    <div class="col-sm-6 hidden-xs ipad">
+{{'ipad.png'|asset_url|img_tag}}
+    </div>
+    <div class="col-sm-6 col-xs-12 brands">
+      <h2>One Account<br>For all these amazing<br>brands</h2>
+{{'brand-logos.png'|asset_url|img_tag:'Brand Logos', 'brand-logos'}}
+      <p>Sign in OR Sign up below</p>
+    </div>
+  </header>
+  
+  <section class="mob-forms-section">
+    <div class="forms-container">
+      <div class="note form-success" id="resetSuccess" style="display:none;">
+        We've sent you an email with a link to update your password.
+      </div>
+{%comment%}
+        This form must use 'customer_login'
+{%endcomment%}{%form 'customer_login'%}
+      <h3>SIGN IN</h3>
+{%include 'form-errors-custom'%}
+      <div id="email">
+        <label for="customer_email">Email Address<em>*</em></label>
+        <input type="email" value="" name="customer[email]" id="customer_email" {%if form.errors contains "email"%} class="error"{%endif%} data-validation="required">
+      </div>
+{%if form.password_needed%}
+      <div id="password">
+        <label for="customer_password">Password<em>*</em></label>
+        <input type="password" value="" name="customer[password]" id="customer_password" {%if form.errors contains "password"%} class="error"{%endif%} data-validation="required">
+      </div>
+{%endif%}
+      
+      <div class="action-btn">
+        <p><input type="submit" class="btn" value="Login"></p>
+        <p class="last">
+          <a href="#" onclick="showRecoverPasswordForm();return false;">Forgot your password?</a>
+        </p>
+      </div>
+      <input type="hidden" id="login_checkout_url" name="checkout_url" value="" />{%endform%}{%comment%}
+        This page uses JavaScript to show/hide the recover password form
+{%endcomment%}
+      <div id="recover_password" style="display: none;">
+        <h3>Reset your password</h3>
+        <p>We will send you an email to reset your password.</p>
+{%comment%}
+          This form must use 'recover_customer_password'
+{%endcomment%}{%form 'recover_customer_password'%}{%include 'form-errors-custom'%}{%comment%}
+          form.posted_successfully? is true only inside this form, but we want
+          to show a success message outside of it. To do so, set the variable
+          reset_success to true, then use JS to show our success message above.
+{%endcomment%}{%if form.posted_successfully?%}{%assign reset_success = true%}{%endif%}
+        
+        <label for="recover-email">Email</label>
+        <input type="email" value="" name="email" id="recover-email" placeholder="your-email@shopify.com" data-validation="required">
+        
+        <div class="action-btn">
+          <p><input type="submit" class="btn" value="Submit"></p>
+          or <a href="#" onclick="hideRecoverPasswordForm();return false;">Cancel</a>
+        </div>
+        <input type="hidden" id="login_checkout_url" name="checkout_url" value="" />{%endform%}{%comment%}
+          If accounts are set as optional, the following will be shown as an option
+          during checkout, not on the default /login page.
+{%endcomment%}{%if _1.checkout.guest_login%}
+        <hr>
+        <h2>Continue as a guest</h2>
+{%form 'guest_login'%}
+        <input type="submit" class="btn" value="Let's go">
+        <input type="hidden" id="login_checkout_url" name="checkout_url" value="" />{%endform%}{%endif%}
+      </div>
+
+      <p class="line"></p>
+      
+      <div id="create-account-buttons" class="create-account-buttons">
+        <h3>Or Create an account {{'for-hot-deal.png'|asset_url|img_tag}}</h3>
+        <div class="row create-buttons">
+          <div class="col-sm-4 col-xs-12">
+{{'self-tanners.jpg'|asset_url|img_tag}}
+            <h3>Self tanners</h3>
+            <ul>
+              <li>VIP customer status</li>
+              <li>Access to great deals</li>
+              <li>Promotions from your favourite brands</li>
+            </ul>
+            <a href="#create-self-tanners-account-start" onclick="showRetailSignupFormForm();" class="btn">Create account</a>
+          </div>
+          <div class="col-sm-4 col-xs-12">
+{{'trade-pros.jpg'|asset_url|img_tag}}
+            <h3>Trade pros</h3>
+            <ul>
+              <li>View trade pricing</li>
+              <li>Access to great deals</li>
+              <li>Promotions from your favourite brands</li>
+            </ul>
+            <a href="#create-trade-pros-account-start" onclick="showProSignupFormForm();" class="btn">Create account</a>
+          </div>
+          <div class="col-sm-4 col-xs-12">
+{{'distributor.jpg'|asset_url|img_tag}}
+            <h3>Wholesalers</h3>
+            <ul>
+              <li>View distributor pricing</li>
+              <li>Access to great deals</li>
+              <li>Save time & order online easily</li>
+            </ul>
+            <a href="#create-wholesalers-account-start" onclick="showWholeSaleSignupFormForm();" class="btn">Create account</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="create-self-tanners-account" style="display: none;">
+        <div class="create-account-buttons">
+          <h3>Or Create an account {{'for-hot-deal.png'|asset_url|img_tag}}</h3>
+          <div class="row create-buttons">
+            <div class="col-sm-4 col-xs-12 active">
+{{'self-tanners.jpg'|asset_url|img_tag}}
+              <h3>Self tanners</h3>
+              <ul>
+                <li>VIP customer status</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-self-tanners-account-start" onclick="showRetailSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 none-active">
+{{'trade-pros.jpg'|asset_url|img_tag}}
+              <h3>Trade pros</h3>
+              <ul>
+                <li>View trade pricing</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-trade-pros-account-start" onclick="showProSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 none-active">
+{{'distributor.jpg'|asset_url|img_tag}}
+              <h3>Wholesalers</h3>
+              <ul>
+                <li>View distributor pricing</li>
+                <li>Access to great deals</li>
+                <li>Save time & order online easily</li>
+              </ul>
+              <a href="#create-wholesalers-account-start" onclick="showWholeSaleSignupFormForm();" class="btn">Create account</a>
+            </div>
+          </div>
+        </div>
+        <h3 id="create-self-tanners-account-start">Create your account & access all our amazing brands</h3>
+{%comment%}
+          This form must use 'create_customer'
+{%endcomment%}{%form 'create_customer'%}{%include 'form-errors-custom'%}
+        <input type="hidden" value="{{settings.store_country}}" name="customer[note][country]">
+        <input type="hidden" value="Self Tanners" name="customer[note][customer_type]">
+        <div id="first_name">
+          <label for="first_name">First Name<em>*</em></label>
+          <input type="text" value="" name="customer[first_name]" id="first_name" {%if form.errors contains "first_name"%} class="error"{%endif%} data-validation="required">
+        </div>
+        
+        <div id="last_name">
+          <label for="last_name">Last Name<em>*</em></label>
+          <input type="text" value="" name="customer[last_name]" id="last_name" {%if form.errors contains "last_name"%} class="error"{%endif%} data-validation="required">
+        </div>
+        
+        <div id="email">
+          <label for="email">Email Address<em>*</em></label>
+          <input type="email" value="" name="customer[email]" id="email" {%if form.errors contains "email"%} class="error"{%endif%}  data-validation="email">
+        </div>
+        
+        <div id="create_password">
+          <label for="password">Password<em>*</em></label>
+          <input type="password" value="" name="customer[password]" id="create_password" {%if form.errors contains "password"%} class="error"{%endif%} data-validation="length" data-validation-length="min6">
+        </div>
+
+        <div id="select-brands">
+          <label>Select the Brands you would like to receive special deals from<em>*</em></label>
+          <ul class="select-brands">
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_minetan]" checked>
+{{'contact-newsletter-minetan.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_taneasy]" checked>
+{{'contact-newsletter-taneasy.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_btan]" checked>
+{{'contact-newsletter-btan.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_pure]" checked>
+{{'contact-newsletter-pure.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_plabel]" checked>
+{{'contact-newsletter-plabel.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_sttropez]" checked>
+{{'contact-newsletter-sttropez.jpg'|asset_url|img_tag}}
+            </li>
+          </ul>
+        </div>
+        
+        <div class="action-btn">
+          <p><input type="submit" value="Create an Account" class="btn"></p>
+        </div>
+        <input type="hidden" id="login_checkout_url" name="checkout_url" value="" />{%endform%}
+      </div>
+
+      <div id="create-trade-pros-account" style="display: none;">
+        <div class="create-account-buttons">
+          <h3>Or Create an account {{'for-hot-deal.png'|asset_url|img_tag}}</h3>
+          <div class="row create-buttons">
+            <div class="col-sm-4 col-xs-12 none-active">
+{{'self-tanners.jpg'|asset_url|img_tag}}
+              <h3>Self tanners</h3>
+              <ul>
+                <li>VIP customer status</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-self-tanners-account-start" onclick="showRetailSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 active">
+{{'trade-pros.jpg'|asset_url|img_tag}}
+              <h3>Trade pros</h3>
+              <ul>
+                <li>View trade pricing</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-trade-pros-account-start" onclick="showProSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 none-active">
+{{'distributor.jpg'|asset_url|img_tag}}
+              <h3>Wholesalers</h3>
+              <ul>
+                <li>View distributor pricing</li>
+                <li>Access to great deals</li>
+                <li>Save time & order online easily</li>
+              </ul>
+              <a href="#create-wholesalers-account-start" onclick="showWholeSaleSignupFormForm();" class="btn">Create account</a>
+            </div>
+          </div>
+        </div>
+        <h3 id="create-trade-pros-account-start">Create your pro account & access all our amazing brands</h3>
+{%comment%}
+          This form must use 'create_customer'
+{%endcomment%}{%form 'create_customer'%}{%include 'form-errors-custom'%}
+        <input type="hidden" value="{{settings.store_country}}" name="customer[note][country]">
+        <input type="hidden" value="Trade Pros" name="customer[note][customer_type]">
+        <input type="hidden" value="PRO" name="customer[tags]" id="tags">
+        <div id="first_name">
+          <label for="first_name">First Name<em>*</em></label>
+          <input type="text" value="" name="customer[first_name]" id="first_name" {%if form.errors contains "first_name"%} class="error"{%endif%} data-validation="required">
+        </div>
+        
+        <div id="last_name">
+          <label for="last_name">Last Name<em>*</em></label>
+          <input type="text" value="" name="customer[last_name]" id="last_name" {%if form.errors contains "last_name"%} class="error"{%endif%} data-validation="required">
+        </div>
+        
+        <div id="email">
+          <label for="email">Email Address<em>*</em></label>
+          <input type="email" value="" name="customer[email]" id="email" {%if form.errors contains "email"%} class="error"{%endif%}  data-validation="email">
+        </div>
+
+        <div id="business">
+          <label for="business">Business Name</label>
+          <input type="text" value="" name="customer[note][business_name]" id="business">
+        </div>
+
+        <div id="business_number">
+          <label for="business_number">Business Registration Number</label>
+          <input type="text" value="" name="customer[note][business_registration_number]" id="business_number">
+        </div>
+
+        <div id="phone">
+          <label for="phone">Phone Number</label>
+          <input type="text" value="" name="customer[note][phone_number]" id="phone">
+        </div>
+        
+        <div id="create_password">
+          <label for="password">Password<em>*</em></label>
+          <input type="password" value="" name="customer[password]" id="create_password" {%if form.errors contains "password"%} class="error"{%endif%} data-validation="required">
+        </div>
+
+        <div id="select-brands">
+          <label>Select the Brands you would like to receive special deals from<em>*</em></label>
+          <ul class="select-brands">
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_minetan]" checked>
+{{'contact-newsletter-minetan.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_taneasy]" checked>
+{{'contact-newsletter-taneasy.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_btan]" checked>
+{{'contact-newsletter-btan.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_pure]" checked>
+{{'contact-newsletter-pure.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_plabel]" checked>
+{{'contact-newsletter-plabel.jpg'|asset_url|img_tag}}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_sttropez]" checked>
+{{'contact-newsletter-sttropez.jpg'|asset_url|img_tag}}
+            </li>
+          </ul>
+        </div>
+        
+        <div class="action-btn">
+          <p><input type="submit" value="Create an Account" class="btn"></p>
+        </div>
+        <input type="hidden" id="login_checkout_url" name="checkout_url" value="" />{%endform%}
+      </div>
+
+      <div id="create-wholesalers-account" style="display: none;">
+        <div class="create-account-buttons">
+          <h3>Or Create an account {{'for-hot-deal.png'|asset_url|img_tag}}</h3>
+          <div class="row create-buttons">
+            <div class="col-sm-4 col-xs-12 none-active">
+{{'self-tanners.jpg'|asset_url|img_tag}}
+              <h3>Self tanners</h3>
+              <ul>
+                <li>VIP customer status</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-self-tanners-account-start" onclick="showRetailSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 none-active">
+{{'trade-pros.jpg'|asset_url|img_tag}}
+              <h3>Trade pros</h3>
+              <ul>
+                <li>View trade pricing</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-trade-pros-account-start" onclick="showProSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 active">
+{{'distributor.jpg'|asset_url|img_tag}}
+              <h3>Wholesalers</h3>
+              <ul>
+                <li>View distributor pricing</li>
+                <li>Access to great deals</li>
+                <li>Save time & order online easily</li>
+              </ul>
+              <a href="#create-wholesalers-account-start" onclick="showWholeSaleSignupFormForm();" class="btn">Create account</a>
+            </div>
+          </div>
+        </div>
+        <h3 id="create-wholesalers-account-start">Request a distribution account for all our amazing brands</h3>
+{%form 'contact'%}{%comment%}
+          Successful message
+{%endcomment%}{%if form.posted_successfully?%}
+        <p class="note form-success">
+          Success! Your enquiry has been submitted. We'll get back to you as soon as possible.
+        </p>
+{%endif%}{%include 'form-errors-custom'%}
+          
+        <div id="contactFormWrapper">
+          <div>
+            <label for="contactFormName">Name<em>*</em></label>
+            <input type="text" id="contactFormName" name="contact[name]" autocapitalize="words" placeholder="{{settings.contact_your_name}}" data-validation="required">
+          </div>
+          
+          <div>
+            <label for="contactFormEmail">Email<em>*</em></label>
+            <input type="email" name="contact[email]" id="contactFormEmail" autocorrect="off" autocapitalize="off" placeholder="{{settings.contact_your_email}}" data-validation="email">
+          </div>
+
+          <div>
+            <label for="contactFormBusinessName">Business Name<em>*</em></label>
+            <input type="text" name="contact[business_name]" id="contactFormBusinessName" autocorrect="off" autocapitalize="off" data-validation="required">
+          </div>
+
+          <div>
+            <label for="contactFormBusinessNumber">Business Registration Number</label>
+            <input type="text" name="contact[business_registration_number]" id="contactFormBusinessNumber" autocorrect="off" autocapitalize="off">
+          </div>
+
+          <div>
+            <label for="contactFormPhone">Phone Number<em>*</em></label>
+            <input type="tel" name="contact[phone]" id="contactFormPhone" pattern="[0-9]*" placeholder="{{settings.contact_phone_number}}" data-validation="required">
+          </div>
+
+          <input type="hidden" name="contact[body]" id="contactFormMessage" value="Request a distribute account">
+          
+          <div class="action-btn">
+            <p><input type="submit" value="Enquire" class="btn"></p>
+          </div>
+        </div>
+        <input type="hidden" id="login_checkout_url" name="checkout_url" value="" />{%endform%}
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  /*
+    Show/hide the recover password form when requested.
+    I'd suggest using some CSS3 transitions to make this change look cool,
+    but this gets the job done for now.
+  */
+  function showRecoverPasswordForm() {
+    document.getElementById('recover_password').style.display = 'block';
+    document.getElementById('customer_login').style.display='none';
+  }
+
+  function hideRecoverPasswordForm() {
+    document.getElementById('recover_password').style.display = 'none';
+    document.getElementById('customer_login').style.display = 'block';
+  }
+
+  function showRetailSignupFormForm() {
+    document.getElementById('create-self-tanners-account').style.display = 'block';
+    document.getElementById('create-account-buttons').style.display = 'none';
+    document.getElementById('create-trade-pros-account').style.display = 'none';
+    document.getElementById('create-wholesalers-account').style.display = 'none';
+  }
+
+  function showProSignupFormForm() {
+    document.getElementById('create-trade-pros-account').style.display = 'block';
+    document.getElementById('create-self-tanners-account').style.display = 'none';
+    document.getElementById('create-account-buttons').style.display = 'none';
+    document.getElementById('create-wholesalers-account').style.display = 'none';
+  }
+
+  function showWholeSaleSignupFormForm() {
+    document.getElementById('create-wholesalers-account').style.display = 'block';
+    document.getElementById('create-trade-pros-account').style.display = 'none';
+    document.getElementById('create-self-tanners-account').style.display = 'none';
+    document.getElementById('create-account-buttons').style.display = 'none';
+  }
+
+  // Allow deep linking to the recover password form
+  if (window.location.hash == '#recover') { showRecoverPasswordForm() }
+  if (window.location.hash == '#create-self-tanners-account-start') { showRetailSignupFormForm() }
+  if (window.location.hash == '#create-trade-pros-account-start') { showProSignupFormForm() }
+  if (window.location.hash == '#create-wholesalers-account-start') { showWholeSaleSignupFormForm() }
+
+  // reset_success is only true when the reset form is
+{%if reset_success%}
+    document.getElementById('resetSuccess').style.display = 'block';
+{%endif%}
+</script>
+
+<script>
+  $(document).ready(function($) {
+    var url = window.location.href.toLowerCase();
+
+    if (url.indexOf("uk.store") >= 0 || url.indexOf("store-minetanbodyskin") >= 0) {
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_sttropez]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_sttropez]"]').prop('checked', false);
+
+      $('#create-trade-pros-account input[name="customer[note][deal_from_sttropez]"]').parent().hide();
+      $('#create-trade-pros-account input[name="customer[note][deal_from_sttropez]"]').prop('checked', false);
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+    }
+    if (url.indexOf("us.store") >= 0 || url.indexOf("us-store") >= 0) {
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+    }
+    if (url.indexOf("eu.store") >= 0 || url.indexOf("eu-store") >= 0) {
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_sttropez]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_sttropez]"]').prop('checked', false);
+      
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+      $('#create-trade-pros-account input[name="customer[note][deal_from_sttropez]"]').parent().hide();
+      $('#create-trade-pros-account input[name="customer[note][deal_from_sttropez]"]').prop('checked', false);
+    }
+    if (url.indexOf("au.store") >= 0 || url.indexOf("au-store") >= 0) {
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+    }
+    $.validate();
+  });
+</script>
+<!-- <script>
+  $('#contact_form').submit(function(event) {
+    event.preventDefault(); //this will prevent the default submit
+    var name = $('#contactFormName').val();
+    var email = $('#contactFormEmail').val();
+    var business_name = $('#contactFormBusinessName').val();
+    var business_registration_number = $('#contactFormBusinessNumber').val();
+    var phone_number = $('#contactFormPhone').val();
+    var customer_data = {};
+
+    customer_data["name"] = name;
+    customer_data["email"] = email;
+    customer_data["business_name"] = business_name;
+    customer_data["business_registration_number"] = business_registration_number;
+    customer_data["phone_number"] = phone_number;
+
+    if (name != '' && email != '' && phone_number != '' && business_name != '') {
+      $.ajax({
+        type: 'POST',
+        url: 'http://company.marqueofbrands.com/wp-admin/admin-ajax.php?action=handle_wholesalers',
+        data: JSON.stringify(customer_data)
+      });
+    }
+    $(this).unbind('submit').submit(); // continue the submit unbind preventDefault
+  })
+</script> -->
+        <script type="text/javascript">
+          document.body.className = " template-customers-login";
+          document.body.id = "account";
+          window.document.title = "Account – Marque of Brands US";
+
+          var checkoutUrl = window.location.protocol + '//' + window.location.host + ('{{locksmith_path}}' || window.location.pathname) + window.location.search;
+
+          checkoutUrl = checkoutUrl.replace('/account/login', '/');
+
+          if (document.getElementsByName) {
+            var nodes = document.getElementsByName('checkout_url');
+            for (var i = 0; i < nodes.length; i++) {
+              nodes[i].value = checkoutUrl;
+            }
+          } else {
+            document.getElementById('login_checkout_url').value = checkoutUrl;
+          }
+        </script>
+{%endif%}{%endcapture%}{%assign customer_login_form = locksmith_customer_login_form%}{%assign customer_register_form = locksmith_customer_register_form%}{%unless locksmith_guest_content%}{%capture locksmith_guest_content%}
+        <p><strong>This content is protected</strong> - please log in with your customer account to continue.</p>
+{{customer_login_form}}{%endcapture%}{%endunless%}{%unless locksmith_access_denied_content%}{%capture locksmith_access_denied_content%}{%if _0%}
+          <p><strong>This content is protected, but it doesn't look like you have access.</strong> If you feel this is a mistake, please contact the store owner.</p>
+{%if locksmith_manual_lock%}
+            <p><a href="#" onclick="window.parent.__locksmith_hide_frame(); return false;">&lsaquo; Back</a></p>
+{%endif%}{%else%}{{locksmith_guest_content}}{%endif%}{%endcapture%}{%endunless%}{%endcapture -%}

@@ -1,0 +1,55 @@
+{{ 'instafeed.min.js' | asset_url | script_tag }}
+
+{% if settings.show_instagram %}
+<section class="home-instagram wow fadeIn" data-wow-delay="{{ settings.time_lazy_load }}ms">
+  <div class="container">
+    <div class="widget-title">   
+      <h3>
+        {% if settings.instagram_title != blank %}
+        {{ settings.instagram_title }}
+        {% endif %}        
+      </h3>
+      <p class="instagram-des">
+        <span>&nbsp;</span>
+        {% if settings.instagram_des != blank %}
+        {{ settings.instagram_des }}
+        {% endif %}  
+      </p>
+    </div>
+    <div id="instafeed" class="row owl-carousel"></div>  
+    {% if settings.display_instagram_button %}
+    {% if settings.instagram_button_text != blank %}
+    <a href="{{ settings.instagram_button_link }}" title="{{ settings.instagram_button_text }}" class="btn">
+      {{ settings.instagram_button_text }}
+      <span class="arrow">arrow</span>
+    </a>		
+    {% endif %}
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  jQuery(document).ready(function(){
+    var feed = new Instafeed({
+      get: "{{ settings.instagram_get }}",    
+      {% if settings.instagram_tag != blank %} tagName: "{{ settings.instagram_tag }}", {% endif %}
+      {% if settings.locationId != blank %} locationId: "{{ settings.instagram_locationId }}", {% endif %}
+      {% if settings.user-id != blank %} userId: {{ settings.user-id }}, {% endif %}
+      {% if settings.accessToken != blank %}accessToken: '{{ settings.accessToken }}', {% endif %}
+      resolution: "{{ settings.resolution_images }}",
+      clientId: "{{ settings.client-id }}",
+      limit: "{{ settings.limit }}",
+      after: function() {
+        jQuery("#instafeed a").attr("target","_blank");
+        jQuery("#instafeed").owlCarousel({
+          navigation : true,
+          items: {{ settings.images_per_row }},
+          itemsTablet: [768,3],
+          itemsTabletSmall: [650,2]
+        });
+      }
+    });
+    feed.run();
+  });
+</script>
+{% endif %}

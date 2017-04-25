@@ -1,0 +1,81 @@
+{% comment %}
+  This page template is a requirement if you are submitting your theme to the Shopify Theme Store.
+  Be sure to select page.contact as the template from the admin page to have this template take effect.
+
+  For information on adding more fields, visit:
+    - http://docs.shopify.com/support/configuration/store-customization/adding-fields-to-the-liquid-contact-form
+{% endcomment %}
+
+{% comment %}
+  Google Map
+{% endcomment %}
+{% if settings.display_google_map %}
+<div class="map">
+  {% if settings.google_map_code != blank %}
+  {{ settings.google_map_code }}
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="contactus-page container">
+  {% include 'breadcrumb' %}
+    
+  {% comment %}
+    Regular page content goes here.
+  {% endcomment %}
+  <div class="rte">
+    {{ page.content }}
+  </div>
+  
+  {% comment %}
+    Contact form starts here
+  {% endcomment %}
+  <div>
+    {% form 'contact' %}
+    
+    {% comment %}
+      Successful message
+    {% endcomment %}
+    {% if form.posted_successfully? %}
+    <p class="note form-success">
+      Thanks for contacting us! We'll get back to you as soon as possible.
+    </p>
+    {% endif %}
+    
+    {% include 'form-errors-custom' %}
+    
+    <div class="row">    
+      <div class="col-xs-9">
+        <div id="contactFormWrapper">
+          <h2>{{ settings.contact_title }}</h2>
+          <p class="line"></p>
+          <p>{{ settings.contact_text_desc }}</p>
+          <label for="contactFormName">Your Name</label>
+          <input type="text" id="contactFormName" name="contact[name]" autocapitalize="words" placeholder="{{ settings.contact_your_name }}">
+            
+          <label for="contactFormPhone">Your Phone</label>
+          <input type="tel" name="contact[phone]" id="contactFormPhone" pattern="[0-9]*" placeholder="{{ settings.contact_phone_number }}">
+          
+          <label for="contactFormEmail">Your Email<em>*</em></label>
+          <input type="email" name="contact[email]" id="contactFormEmail" autocorrect="off" autocapitalize="off" placeholder="{{ settings.contact_your_email }}">
+          
+          <label for="contactFormMessage">Your Comment<em>*</em></label>
+          <textarea rows="10" name="contact[body]" id="contactFormMessage" placeholder="{{ settings.contact_your_comment }}"></textarea>
+          
+          <input type="submit" class="btn left" value="Submit Contact">
+        </div>
+      </div>
+      
+      {% if settings.display_location %}
+      <div class="col-xs-3">
+        <div class="location">
+          {% if settings.location_code != blank %}
+          {{ settings.location_code }}
+        </div>
+      </div>
+      {% endif %}
+      {% endif %}
+    </div>
+    {% endform %}
+  </div>
+</div>

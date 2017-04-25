@@ -1,0 +1,28 @@
+            <div class="quantity">
+              <label>Quantity</label>
+              
+              {% assign factor = 1 %}
+				{% if factor_number != nil %}
+				{% assign factor = factor_number %}
+			  {% endif %}
+              
+              {% if customer and (customer.tags contains "Trade Pros" or customer.tags contains "Wholesalers") %}
+                {% assign productMetafields = item.product.metafields.product %}
+                {% if productMetafields.qty_multiple_factor %}
+                  {% assign factor = productMetafields.qty_multiple_factor %}
+                {% endif %}
+              {% endif %}
+              <select id="updates_{{ item.id }}" name="updates[]" class="nice-select qty" data-id="{{ item.id }}">
+                {% for i in (1..50) %}
+                  {% assign value = i | times: factor %}
+                  <option {% if value == item.quantity %} selected="selected" {% endif %} value="{{ value }}">{{ value }}</option>
+                {% endfor %}
+              </select>
+
+              {% comment %}
+                To remove an item from the cart, reload the page with the following parameters.
+                Added data-id for the ajax cart implementation only.
+              {% endcomment %}
+              <a class="remove" href="/cart/change?line={{ forloop.index }}&amp;quantity=0" data-id="{{ item.id }}">Remove</a>
+              <input class="update" type="submit" name="update" class="btn-secondary" value="Update cart">
+            </div>

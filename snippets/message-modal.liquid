@@ -1,0 +1,33 @@
+<div class="loading-modal modal">Loading...</div>
+<div class="ajax-error-modal modal">
+  <div class="modal-inner">
+    <div class="ajax-error-title">Error</div>
+    <div class="ajax-error-message"></div>
+  </div>
+</div>
+<div class="ajax-success-modal modal">
+  	<div class="overlay"></div>
+	<div class="content">
+      <div class="ajax-left">
+        <img class="ajax-product-image" alt="&nbsp;" src="" style="max-width:65px; max-height:100px"/>
+      </div>
+      <div class="ajax-right">
+        <p class="ajax-product-title"></p>
+        <p class="success-message btn-go-to-cart">is added to your shopping cart.</p>
+        <p class="success-message btn-go-to-wishlist">is added to your wish list.</p>        
+        <div class="actions">
+          <button class="btn-secondary continue-shopping" onclick="javascript:void(0)">Continue Shopping</button>
+          
+          <!-- Add view query -->
+          {% assign cart_url = "/cart" %}
+          {% if cart_template != nil %}
+          {% assign cart_url = "/cart?view=" | append: cart_template %}
+          {% endif %}
+          <button class="btn-secondary btn-go-to-cart" onclick="window.location='{{cart_url}}'">Go To Cart</button>
+
+          <button class="btn-secondary btn-go-to-wishlist" onclick="window.location='/pages/wish-list'">Go To Wishlist</button>
+        </div>
+      </div>
+    <a href="javascript:void(0)" class="close-modal">Close</a>
+ 	</div>    
+</div>

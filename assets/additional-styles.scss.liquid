@@ -1,0 +1,703 @@
+#your-shopping-cart {
+  main.main-content {
+    min-height: calc(100vh - 75px);
+  }
+
+  .site-footer {
+    padding-top: 0; 
+  }
+}
+
+.toolbar {
+    background: white;
+}
+
+/* Tempoary solution to hide collection title, need to figure why remote title in HTML make AJAX fail */
+.template-collection {
+  .page-header {
+    h2 {
+      display: none;
+    }
+  }
+}
+
+.main-content {
+  @media only screen and (max-width: 767px) {
+    padding-top: 135px;
+  }
+
+  iframe {
+    @media only screen and (max-width: 768px) {
+      height: 2200px !important;
+    }
+  }
+}
+
+.template-product {
+  .qty {
+    margin-bottom: 22px;
+  }
+}
+
+.cart-list {
+  .qty {
+    width: 110px;
+    margin-right: 30px;
+  }
+
+  li {
+    overflow: visible;
+  }
+
+  ul.list {
+    li {
+      padding-bottom: 0px;
+      width: 108px;
+    }
+  }
+}
+
+.clear-both {
+  clear: both;
+}
+
+/*----------  SIDEBAR LINKS Start  ----------*/
+
+.sidebar-links {
+  ul {
+    li {
+      a {
+        padding: 5px 0;
+        border-bottom: 1px solid #000;
+        display: block;
+        line-height: 23px;
+
+        &.active:before {
+          border: 5px solid transparent;
+          border-left: 5px solid #000;
+          width: 0;
+          height: 0;
+          content: "";
+          display: inline-block;
+          margin-right: 5px;
+        }
+      }
+
+      div {
+        padding: 5px 0;
+        border-bottom: 1px solid #000;
+        line-height: 23px;
+        font-weight: 700;
+        color: #000;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      li {
+        a {
+          padding: 8px 0;
+          margin-bottom: 0;
+          border-bottom: 1px solid #D3D3D3;
+          font-size: 12px;
+          line-height: 18px;
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+/*----------  SIDEBAR LINKS End  ----------*/
+
+
+/*----------  NICE SELECTOR End  ----------*/
+// Default variables
+$font_size: 14px !default;
+$font_size_small: 12px !default;
+
+$input_border_radius: 0px !default;
+$input_height: 35px !default;
+$input_height_small: 36px !default;
+$dropdown_padding: 18px !default;
+$input_width: 65px !default;
+$list_max_height: 150px !default;
+
+$gray_dark: #444 !default;
+$gray: #999 !default;
+$gray_light: #cbcbcb !default;
+$gray_lighter: #f6f6f6 !default;
+$primary_light: $gray !default;
+$arrow_color: $gray !default;
+
+// Style the dropdown
+.nice-select {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  background-color: #fff;
+  border-radius: $input_border_radius;
+  border: solid 1px $gray_light; 
+  box-sizing: border-box;
+  clear: both;
+  cursor: pointer;
+  display: block;
+  float: left;
+  font-family: inherit;
+  font-size: $font_size;
+  font-weight: normal;
+  height: $input_height;
+  line-height: $input_height - 2;
+  outline: none;
+  padding-left: $dropdown_padding;
+  padding-right: $dropdown_padding + 12;
+  position: relative;
+  text-align: left !important;
+  transition: all 0.2s ease-in-out;
+  user-select: none;
+  white-space: nowrap;
+  width: $input_width;
+  &:hover {
+    border-color: darken($gray_light, 5%);
+  }
+  &:active, &:focus {
+    border-color: $primary_light;
+  }
+  // Arrow
+  &:after { 
+    border-bottom: 2px solid $arrow_color;
+    border-right: 2px solid $arrow_color;
+    content: '';
+    display: block; 
+    height: 5px;
+    margin-top: -4px;
+    pointer-events: none;
+    position: absolute; 
+    right: 12px; 
+    top: 50%; 
+    transform-origin: 66% 66%;
+    transform: rotate(45deg);
+    transition: all 0.15s ease-in-out;
+    width: 5px;
+  }
+  
+  &.open {
+    @extend :active;
+    &:after {
+      transform: rotate(-135deg);
+    }
+    .list {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1) translateY(0);
+    }
+  }
+  &.disabled {
+    border-color: lighten($gray_light, 2%);
+    color: $gray;
+    pointer-events: none;
+    &:after { 
+      border-color: lighten($arrow_color, 20%);
+    }
+  }
+  
+  // Modifiers
+  &.wide {
+    width: 100%;
+    .list {
+      left: 0 !important;
+      right: 0 !important;
+    }
+  }
+  &.right {
+    float: right;
+    .list {
+      left: auto;
+      right: 0;
+    }
+  }
+  &.small {
+    font-size: $font_size_small;
+    height: $input_height_small;
+    line-height: $input_height_small - 2;
+    &:after { 
+      height: 4px;
+      width: 4px;
+    }
+    .option {
+      line-height: $input_height_small - 2;
+      min-height: $input_height_small - 2;
+    }
+  }
+  
+  // List and options
+  .list {
+    background-color: #fff;
+    border-radius: $input_border_radius;
+    box-shadow: 0 0 0 1px rgba($gray_dark, .11);
+    box-sizing: border-box;
+    margin-top: 4px;
+    opacity: 0;
+    padding: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 100%; left: 0;
+    transform-origin: 50% 0;
+    transform: scale(.75) translateY(- $input_height / 2);
+    transition: all .2s cubic-bezier(0.5, 0, 0, 1.25), opacity .15s ease-out;
+    z-index: 9;
+    overflow: auto;
+    overflow: overlay;
+    max-height: $list_max_height;
+
+    &:hover .option:not(:hover) {
+      background-color: transparent !important;
+    }
+  }
+  .option {
+    cursor: pointer;
+    font-weight: 400;
+    line-height: $input_height - 2;
+    list-style: none;
+    min-height: $input_height - 2;
+    outline: none;
+    padding-left: $dropdown_padding;
+    padding-right: $dropdown_padding + 11;
+    text-align: left;
+    transition: all 0.2s;
+    &:hover, &.focus, &.selected.focus { 
+      background-color: $gray_lighter;
+    }
+    &.selected { 
+      font-weight: bold;
+    }
+    &.disabled {
+      background-color: transparent;
+      color: $gray;
+      cursor: default;
+    }
+  }
+}
+
+// Use display instead of opacity for IE <= 10
+.no-csspointerevents .nice-select {
+  .list {
+    display: none;
+  }
+  &.open {
+    .list {
+      display: block;
+    }
+  }
+}
+/*----------  NICE SELECTOR End  ----------*/
+
+
+/*----------  PRODUCT SELECTOR Start  ----------*/
+
+.selector-opition {
+  width: 230px;
+} 
+/*----------  PRODUCT SELECTOR End  ----------*/
+
+/*----------  LOGIN PAGE Start  ----------*/
+#mob-login-page {
+  width: 740px;
+  margin: 30px auto;
+
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+  }
+
+  .mob-login-header {
+    font-family: 'book';
+    font-size: 14px;
+    position: relative;
+    max-height: 300px;
+    margin-bottom: 80px;
+    border-bottom: 1px solid #cbcbcb;
+
+    .brands {
+      h2 {
+        text-transform: uppercase;
+        font-size: 30px;
+      }
+
+      .brand-logos {
+        margin-bottom: 30px
+      }
+
+      p {
+        margin-bottom: 30px;
+      }
+    }
+  }
+
+  &.register-page {
+    .mob-forms-section {
+      background: white;
+    }
+  }
+
+  .mob-forms-section {
+    background: url('iphone-background.png') no-repeat top right;
+
+    @media only screen and (max-width: 768px) {
+      background: white;
+    }
+
+    .forms-container {
+      min-width: 400px;
+      margin: 0 auto;
+      font-family: 'book';
+
+      @media only screen and (max-width: 440px) {
+        width: 100%;
+        min-width: inherit;
+      }
+
+      h3 {
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      p {
+        font-size: 15px;
+      }
+
+      a.btn {
+        font-size: 14px;
+        margin-bottom: 30px;
+        width: 100%;
+
+        @media only screen and (max-width: 768px) {
+          padding: 0 10px;
+        }
+      }
+
+      .note.form-error {
+        color: red;
+      }
+
+      #recover_password {
+        margin-bottom: 50px;
+      }
+
+      .create-account-buttons {
+        margin-bottom: 10px;
+        padding-top: 10px;
+
+        h3 {
+          img {
+            height: 25px;
+            margin-top: -10px;
+          }
+        }
+
+        p {
+          margin-bottom: 5px;
+        }
+
+        .create-buttons {
+          text-align: center;
+
+          h3 {
+            margin: 10px 0;
+          }
+
+          .none-active {
+            opacity: 0.5;
+          }
+
+          ul {
+            text-align: left;
+            list-style-image: url(check-mark-list.png); 
+            padding-left: 0;
+            font-size: 11px;
+          }
+        }
+      }
+
+      p.distributor-btn {
+        background: #cbcbcb;
+        padding: 5px;
+
+        a {
+          text-decoration: underline;
+        }
+      }
+
+      #create-self-tanners-account {
+        margin-bottom: 50px;
+      }
+
+      #create-trade-pros-account {
+        margin-bottom: 50px;
+      }
+
+      p.line {
+        border-bottom: 1px solid #cbcbcb;
+        margin-bottom: 40px;
+      }
+
+      ul.select-brands {
+        list-style: none;
+        padding-left: 0;
+        overflow: auto;
+
+        li {
+          float: left;
+          width: 25%;
+          margin-bottom: 20px;
+
+          @media only screen and (max-width: 768px) {
+            width: 50%;
+          }
+
+          input[type="checkbox"] {
+            display: inline-block !important;
+            width: 15px !important;
+            margin-bottom: 0 !important;
+            min-width: 0;
+          }
+
+          img {
+            height: 23px;
+          }
+        }
+      }
+    }
+  }
+}
+/*----------  LOGIN PAGE End  ----------*/
+
+
+/*----------  STTROPEZ US BODY TEMPLATE Start  ----------*/
+body.sttropez-body-us {
+  .wrapper-container {
+    .main-content {
+      padding-top: 0;
+    }
+  }
+}
+/*----------  STTROPEZ US BODY TEMPLATE End  ----------*/
+
+
+/*----------  STTROPEZ BODY TEMPLATE Start  ----------*/
+body.sttropez-body {
+  .wrapper-container {
+    background: #f4f4f4;
+
+    .main-content {
+      .row {
+        .sidebar-links {
+          .widget-title {
+            h3 {
+              font-family: ITCAvantGardeStd-XLt,Avantgarde,"Century Gothic",CenturyGothic,"AppleGothic",sans-serif;
+              letter-spacing: 1px;
+            }
+          }
+
+          .widget-content {
+            & > ul {
+              & > li {
+                & > a {
+                  font-family: ITCAvantGardeStd-XLt,Avantgarde,"Century Gothic",CenturyGothic,"AppleGothic",sans-serif;
+                  letter-spacing: 1px;
+                }
+
+                & > div {
+                  font-family: ITCAvantGardeStd-XLt,Avantgarde,"Century Gothic",CenturyGothic,"AppleGothic",sans-serif;
+                  letter-spacing: 1px;
+                }
+
+                & > ul {
+                  li {
+                    a {
+                      font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","Arial Narrow",Helvetica,Arial,"Lucida Grande",sans-serif;
+                      letter-spacing: 1px;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .product-shop {
+          #add-to-cart-form {
+            #product-add-to-cart {
+              &:hover {
+                border-color: #3392b3;
+                background-color: #3392b3;
+              }
+            }
+          }
+        }
+      }
+
+      .sttropez-cart {
+        .cart-row {
+          .checkout-btn {
+            &:hover {
+              border-color: #3392b3;
+              background-color: #3392b3;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+/*----------  STTROPEZ BODY TEMPLATE End  ----------*/
+
+/*----------  MINETAN BODY TEMPLATE Start  ----------*/
+.minetan-main {
+  .product-shop {
+    #add-to-cart-form {
+      #product-add-to-cart {
+        &:hover {
+          border-color: #18a09c;
+          background-color: #18a09c;
+        }
+      }
+    }
+  }
+}
+/*----------  MINETAN BODY TEMPLATE End  ----------*/
+
+/*----------  TANEASY BODY TEMPLATE Start  ----------*/
+.taneasy-main {
+  .product-shop {
+    #add-to-cart-form {
+      #product-add-to-cart {
+        &:hover {
+          border-color: #6fc2b6;
+          background-color: #6fc2b6;
+        }
+      }
+    }
+  }
+}
+/*----------  TANEASY BODY TEMPLATE End  ----------*/
+
+/*----------  BTAN BODY TEMPLATE Start  ----------*/
+.btan-body {
+  .gf-menu-device-container {
+    .site-nav {
+      .dropdown {
+        .toogleClick {
+          display: none;
+        }
+      }
+    }
+  }
+  .btan-main {
+    .products-grid {
+      .product-item {
+        .product-title {
+          text-transform: none;
+        }
+      }
+    }
+    .product-shop {
+      #add-to-cart-form {
+        #product-add-to-cart {
+          &:hover {
+            border-color: #86754d;
+            background-color: #86754d;
+          }
+        }
+      }
+    }
+  }
+}
+/*----------  BTAN BODY TEMPLATE End  ----------*/
+
+
+/*----------  PRODUCT ACCORDION Start  ----------*/
+#accordion {
+  .panel-heading {
+    .panel-title {
+      a {
+        display: block;
+
+        &::after {
+          font-family: 'FontAwesome';
+          content: "\f054";
+          float: right;
+          -webkit-transition:  all 0.2s ease-in-out;
+          -moz-transition:  all 0.2s ease-in-out;
+          -o-transition:  all 0.2s ease-in-out;
+          -ms-transition:  all 0.2s ease-in-out;
+          transition:  all 0.2s ease-in-out;
+        }
+
+        &.collapsed::after {
+          // content: "\f078";
+          -webkit-transform:rotate(90deg);
+          -moz-transform:rotate(90deg);
+          transform:rotate(90deg);
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+}
+/*----------  PRODUCT ACCORDION End  ----------*/
+
+/*----------  GLOBAL CART BODY TEMPLATE Start  ----------*/
+.template-cart {
+  .page-header {
+    padding-top: 15px;
+  }
+
+  .cart-row {
+    .continue-shopping-button {
+      background-color: #ffffff;
+      color: #030000;
+      border-color: #000000;
+      line-height: 47px;
+
+      &:hover {
+        background-color: #000000;
+        color: #ffffff;
+        border-color: #000000;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+
+
+/*----------  GLOBAL CART BODY TEMPLATE End  ----------*/
+
+/*----------  STYLE SEARCH BAR MOBILE Start  ----------*/
+.gf-menu-device-container {
+  .nav-search {
+    .icon-search {
+      display: none;
+    }
+
+    .search-bar {
+      width: 100%;
+    }
+
+    .input-group-field {
+      width: 100%;
+    }
+
+    .input-group-btn {
+      width: 1%;
+    }
+  }
+}
+/*----------  STYLE SEARCH BAR MOBILE End  ----------*/
+// Hide old price
+.on-sale {
+  .old-price {
+    display: none;
+  }
+
+  .special-price {
+    color: black !important;
+  }
+}

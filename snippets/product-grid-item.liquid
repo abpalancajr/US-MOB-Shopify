@@ -1,0 +1,101 @@
+{% assign on_sale = false %}
+{% if bold_compare_at_price_min > bold_price_min %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if product.available  %}
+  {% assign sold_out = false %}
+{% endif %}
+
+{% assign productIndex = forloop.index | minus:1 %}
+{% assign delayTime = settings.time_lazy_load | times : productIndex %}
+
+<div class="inner product-item {% if sold_out %}sold-out{% endif %}{% if on_sale %} on-sale{% endif %} wow fadeIn" data-wow-delay="{{delayTime}}ms" id="product-{{ product.id }}">
+  <div class="inner-top">
+    <div class="product-top">
+      <div class="product-image">
+        {% assign query = "" %}
+        {% if product_template != nil %}
+        {% assign query = "?view=" | append: product_template %}
+        {% endif %}
+        <a href="{{ product.url | within: collection | append: query }}" class="product-grid-image">
+          <img src="{{ product.featured_image.src | product_img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}">
+          <div class="hover"></div>
+        </a>
+      </div>
+
+      {% if settings.display_sale_sold_icon %}
+        {% if (on_sale or sold_out) %}
+        <div class="product-label">
+          {% if on_sale %}
+          <strong class="label">Sale</strong>
+          {% endif %}
+          {% if sold_out %}
+          <strong class="sold-out-label">Sold Out</strong>
+          {% endif %}
+        </div>
+        {% endif %}
+      {% endif %}
+
+      <div class="product-des">
+        {% include 'wishlist-product' %}
+
+        <div class="action">
+          {% assign variantCount = bold_variants_size %}
+          <form action="/cart/add" method="post" class="variants" id="product-actions-{{ product.id }}" enctype="multipart/form-data" style="padding:0px;">    
+            {% if sold_out %}
+            <input class="btn add-to-cart-btn" type="submit" value="Unavailable" disabled="disabled" />
+            {% else %}
+              {% if variantCount > 1 %}    
+              <input class="btn" type="button" onclick="window.location.href='{{product.url | append: query }}'" value="View" />
+              {% else %}
+                {% assign productMetafields = product.metafields.product %}
+                {% assign minumumQty = 1 %}
+                {% if customer and (customer.tags contains "PRO" or customer.tags contains "WHS") %}
+                  {% if productMetafields.qty_multiple_factor %}
+                    {% assign minumumQty = productMetafields.qty_multiple_factor %}
+                  {% endif %}
+                {% endif %}
+              <input type="hidden" name="id" value="{{ product.variants[0].id }}" />
+              <input type="hidden" name="quantity" value="{{minumumQty}}" />      
+              <input class="btn add-to-cart-btn" type="submit" value="Add to Cart" />
+              {% endif %}
+            {% endif %}
+          </form>     
+        </div>
+
+        {% if settings.enable_quick_view %}
+        <div class="quickview-button">
+          <a href="javascript:void(0)" id="{{ product.handle | append: query }}" title="Quick View">Quick view</a>
+        </div>
+        {% endif %}
+
+      </div>
+
+    </div>
+  
+    <div class="product-bottom">
+      <a class="product-title" href="{{ product.url | within: collection }}">{{ product.title }}</a>
+
+      {% if settings.display_product_reviews %}
+      <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+      {% endif %}
+
+      <div class="price-box">
+        {% if on_sale %}
+        <p class="sale">
+          <span class="old-price"> {{ bold_compare_at_price_min | money }}</span>
+          <span class="special-price">{% if bold_price_varies %}{% endif %}{{ bold_price_min | money }}</span>
+        </p>
+        {% else %}
+        <p class="regular-product">
+          <span>{% if bold_price_varies %}{% endif %}{{ bold_price_min | money }}</span>
+        </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  
+  {% include 'item-swatch' %}
+</div>

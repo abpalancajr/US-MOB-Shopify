@@ -1,0 +1,92 @@
+// Bugherd extension
+(function (d, t) {
+ var bh = d.createElement(t), s = d.getElementsByTagName(t)[0];
+ bh.type = 'text/javascript';
+ bh.src = 'https://www.bugherd.com/sidebarv2.js?apikey=zwxvakjnbxvcxrg6qds4zq';
+ s.parentNode.insertBefore(bh, s);
+ })(document, 'script');
+
+jQuery(document).ready(function($) {
+
+  var initAnotherMenu = function ($){
+
+    var marker = jQuery('#marker'),
+        current = jQuery('.current > a > span');
+    if (marker.height() != null && typeof current.offset() !== "undefined") {
+      // Initialize the marker position and the active class
+      current.addClass('active');
+      marker.css({
+          // Place the marker in the middle of the border
+          bottom: -(marker.height() / 2),
+          left: current.offset().left,
+          width: current.outerWidth(),
+          display: "block"
+      });
+
+      /*if (Modernizr.csstransitions) {*/
+        console.log("using css3 transitions");
+      jQuery('.header-bottom .nav-bar>.container li').mouseover(function () {
+          var self = jQuery(this).find('span'),
+              offsetLeft = self.offset().left,
+              // Use the element under the pointer OR the current page item
+              width = self.outerWidth() || current.outerWidth(),
+              // Ternary operator, because if using OR when offsetLeft is 0, it is considered a falsy value, thus causing a bug for the first element.
+              left = offsetLeft == 0 ? 0 : offsetLeft || current.offset().left;
+        // Play with the active class
+          jQuery('.active').removeClass('active');
+          self.addClass('active');
+          marker.css({
+              left: left,
+              width: width,
+          });
+      });
+
+      // When the mouse leaves the menu
+      jQuery('ul').mouseleave(function () {
+        // remove all active classes, add active class to the current page item
+          jQuery('.active').removeClass('active');
+          current.addClass('active');
+        // reset the marker to the current page item position and width
+          marker.css({
+              left: current.offset().left,
+              width: current.outerWidth()
+          });
+
+      });
+
+    }
+  }
+
+  var setUpShopAllBar = function ($){
+    jQuery('header.minetan .professional-menu .shop-all-bar a').attr("href", "/collections/mine-tan-professional");
+    jQuery('header.minetan .professional-menu .shop-all-bar a .shop-bold').html("SHOP ALL");
+    jQuery('header.minetan .professional-menu .shop-all-bar a .shop').html("Professional");
+
+    jQuery('header.taneasy .shop-our-range-menu .shop-all-bar a').attr("href", "/collections/tan-easy-pro-tools");
+  }
+
+  var positionSttropezNavBar = function ($){
+    jQuery('header.site-header.sttropez .nav-bar .sttropez-nav>.mega-menu').mouseover(function () {
+      var width = window.innerWidth;
+      if (width >= 1200) {
+        var left = jQuery(this).offset().left - 83;
+        console.log(left);
+        jQuery(this).find('.site-nav-dropdown .col-1').css('margin-left', left + 'px');
+      }
+    });
+  }
+
+  initAnotherMenu();
+  setUpShopAllBar();
+  positionSttropezNavBar();
+
+  // Add scrollbar to main nav
+  if ($('.site-header.minetan').length > 0) {
+    $('.dropdown.mega-menu').on('hover', function(){
+      var menu_height = $(this).find('.inner').eq(0).height() * 2 + $(this).find('.shop-all-bar').height() + 5;
+      $(this).find('.site-nav-dropdown > .container').css('max-height', menu_height + 'px');
+    });
+  }
+
+  $('#accordion .product-description .panel-title a').addClass('collapsed');
+});

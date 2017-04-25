@@ -1,0 +1,120 @@
+<footer class="site-footer footer-sttropez" role="contentinfo">
+  <div class="container">
+    <div class="footer-top"> 
+      <div class="row">
+        {% if settings.footer_column_1_title != blank %}
+        <div class="col-1 wow fadeInUp minetan-footer-column-1" data-wow-delay="{{ settings.time_lazy_load }}ms">
+          <ul>
+            {% for link in linklists.sttropez-footer-column-1.links %}
+            <li>{{ link.title | link_to: link.url }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        {% if settings.footer_column_2_title != blank %}
+        <div class="col-2 wow fadeInUp minetan-footer-column-2" data-wow-delay="{{ settings.time_lazy_load | times: 2 }}ms">
+          <ul>
+            {% for link in linklists.sttropez-footer-column-2.links %}
+            <li>{{ link.title | link_to: link.url }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        {% if settings.footer_column_3_title != blank %}
+        <div class="col-3 wow fadeInUp minetan-footer-column-3" data-wow-delay="{{ settings.time_lazy_load | times: 3 }}ms">
+          <ul>
+            {% for link in linklists.sttropez-footer-column-3.links %}
+            <li>{{ link.title | link_to: link.url }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        <div class="col-4 wow fadeInUp last" data-wow-delay="{{ settings.time_lazy_load | times: 4 }}ms">
+          {% include 'social-sttropez' %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="very-bottom-footer">
+    <div class="container">
+      <div class="copyright">
+        <p class="text"><a href="http://uk.store.marqueofbrands.com/?choose-country">{{ 'uk.png' | asset_url | img_tag: 'UK', 'flag' }}<span class="country-selector">COUNTRY SELECTOR</span></a>© 2017 MARQUE OF BRANDS PTY LTD. ALL RIGHTS RESERVED</p>
+      </div>
+      <div class="bottom-footer-menu">
+        <ul id="very-bottom-footer-menu" class="menu">
+          {% for link in linklists.sttropez-very-bottom-footer-menu.links %}
+            <li>{{ link.title | link_to: link.url }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div id="quickViewOverlay_CountrySelector"></div>
+  <div id="quickViewResponseData_CountrySelector">
+    <div class="close-quickview">
+      {{ 'icon-close.png' | asset_url | img_tag: 'close' }}
+    </div>
+    <p class="title">SELECT YOUR REGION</p>
+    <ul class="country-selector">
+      <li>
+        <a href="http://us.store.marqueofbrands.com/collections/sttropez-professional">{{ 'us.png' | asset_url | img_tag: 'US', 'flag' }}USA & Canada</a>
+      </li>
+      <li>
+        <a href="http://uk.store.marqueofbrands.com/collections/sttropez-professional">{{ 'uk.png' | asset_url | img_tag: 'UK', 'flag' }}United Kingdom</a>
+      </li>
+      <li>
+        <a href="http://eu.store.marqueofbrands.com/collections/sttropez-professional">{{ 'eu.png' | asset_url | img_tag: 'EU', 'flag' }}Europe</a>
+      </li>
+      <li>
+        <a href="http://au.store.marqueofbrands.com/collections/sttropez-professional">{{ 'au.png' | asset_url | img_tag: 'AU', 'flag' }}Australia & NZ</a>
+      </li>
+    </ul>
+  </div>
+  <script>
+    jQuery(document).ready(function($) {
+      function showQuickviewCountrySelector() {
+        $('#quickViewResponseData_CountrySelector').show();
+        $('#quickViewOverlay_CountrySelector').show();
+      }
+      function hideQuickviewCountrySelector() {
+        $('#quickViewResponseData_CountrySelector').hide();
+        $('#quickViewOverlay_CountrySelector').hide();
+      }
+      
+      $('.close-quickview').on('click', function(){
+        hideQuickviewCountrySelector();
+      });
+      
+      $('#quickViewOverlay_CountrySelector').on('click', function(e){
+        if(e.target !== e.currentTarget) return;
+        hideQuickviewCountrySelector();
+      });
+
+      $('a[href*="choose-country"]').on('click', function(e) { // filter choose country links
+        e.preventDefault();
+        showQuickviewCountrySelector();
+      });
+
+      var url = window.location.href.toLowerCase();
+      var curSrc = $('.copyright .text .flag').attr('src');
+      var curHref = $('.copyright .text a').attr('href');
+      if (url.indexOf("us.store") >= 0) {
+        curSrc = curSrc.replace('uk.png', 'us.png');
+        curHref = curHref.replace('uk.store', 'us.store');
+      }
+      if (url.indexOf("eu.store") >= 0) {
+        curSrc = curSrc.replace('uk.png', 'eu.png');
+        curHref = curHref.replace('uk.store', 'eu.store');
+      }
+      if (url.indexOf("au.store") >= 0) {
+        curSrc = curSrc.replace('uk.png', 'au.png');
+        curHref = curHref.replace('uk.store', 'au.store');
+      }
+      $('.copyright .text .flag').attr('src', curSrc);
+      $('.copyright .text a').attr('href', curHref);
+    });
+  </script>
+</footer>
+
+{% include 'message-modal', cart_template: 'sttropez'  %}

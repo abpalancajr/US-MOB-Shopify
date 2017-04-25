@@ -1,0 +1,576 @@
+{% comment %}
+  This template will be automatically generated for you if the file doesn't exist,
+  but where's the fun in having no control? Define your layout below.
+
+  The 'layout settings.customer_layout' line is inserted at the top of every customer account template.
+  Your theme's settings determine to use the 'default' or 'theme' customer templates.
+  More info:
+    - http://www.tetchi.ca/shopify-theme-from-scratch-part-11/
+
+  Template note:
+    - All IDs on this template are required to make the forms submit properly
+    - There are two instances of inline JS below. Best practices advise separating this
+      into an external JS file.
+{% endcomment %}
+
+{% layout settings.customer_layout %}
+
+{{ 'jquery.form-validator.min.js' | asset_url | script_tag }}
+
+<div class="login-page" id="mob-login-page">
+  {% comment %}
+    If a user has successfully requested a new password, the form.posted_successfully? variable
+    is set to true within the 'recover_customer_password' form only. Within that form you'll see
+    us assign a variable 'reset_success' to true, which is used in JS to show our success message.
+  {% endcomment %}
+
+  <header class="mob-login-header row">
+    <div class="col-sm-6 hidden-xs ipad">
+      {{ 'ipad.png' | asset_url | img_tag }}
+    </div>
+    <div class="col-sm-6 col-xs-12 brands">
+      <h2>One Account<br>For all these amazing<br>brands</h2>
+      {{ 'brand-logos.png' | asset_url | img_tag: 'Brand Logos', 'brand-logos' }}
+      <p>Sign in OR Sign up below</p>
+    </div>
+  </header>
+
+  <section class="mob-forms-section">
+    <div class="forms-container">
+      <div class="note form-success" id="resetSuccess" style="display:none;">
+        We've sent you an email with a link to update your password.
+      </div>
+
+      {% comment %}
+        This form must use 'customer_login'
+      {% endcomment %}
+      {% form 'customer_login' %}
+      <h3>SIGN IN</h3>
+      {% include 'form-errors-custom' %}
+      <div id="email">
+        <label for="customer_email">Email Address<em>*</em></label>
+        <input type="email" value="" name="customer[email]" id="customer_email" {% if form.errors contains "email" %} class="error"{% endif %} data-validation="required">
+      </div>
+
+      {% if form.password_needed %}
+      <div id="password">
+        <label for="customer_password">Password<em>*</em></label>
+        <input type="password" value="" name="customer[password]" id="customer_password" {% if form.errors contains "password" %} class="error"{% endif %} data-validation="required">
+      </div>
+      {% endif %}
+
+      <div class="action-btn">
+        <p><input type="submit" class="btn" value="Login"></p>
+        <p class="last">
+          <a href="#" onclick="showRecoverPasswordForm();return false;">Forgot your password?</a>
+        </p>
+      </div>
+      {% endform %}
+
+      {% comment %}
+        This page uses JavaScript to show/hide the recover password form
+      {% endcomment %}
+      <div id="recover_password" style="display: none;">
+        <h3>Reset your password</h3>
+        <p>We will send you an email to reset your password.</p>
+
+        {% comment %}
+          This form must use 'recover_customer_password'
+        {% endcomment %}
+        {% form 'recover_customer_password' %}
+
+        {% include 'form-errors-custom' %}
+
+        {% comment %}
+          form.posted_successfully? is true only inside this form, but we want
+          to show a success message outside of it. To do so, set the variable
+          reset_success to true, then use JS to show our success message above.
+        {% endcomment %}
+        {% if form.posted_successfully? %}
+        {% assign reset_success = true %}
+        {% endif %}
+
+        <label for="recover-email">Email</label>
+        <input type="email" value="" name="email" id="recover-email" placeholder="your-email@shopify.com" data-validation="required">
+
+        <div class="action-btn">
+          <p><input type="submit" class="btn" value="Submit"></p>
+          or <a href="#" onclick="hideRecoverPasswordForm();return false;">Cancel</a>
+        </div>
+        {% endform %}
+
+        {% comment %}
+          If accounts are set as optional, the following will be shown as an option
+          during checkout, not on the default /login page.
+        {% endcomment %}
+
+        {% if shop.checkout.guest_login %}
+        <hr>
+        <h2>Continue as a guest</h2>
+        {% form 'guest_login' %}
+        <input type="submit" class="btn" value="Let's go">
+        {% endform %}
+        {% endif %}
+      </div>
+
+      <p class="line"></p>
+
+      <div id="create-account-buttons" class="create-account-buttons">
+        <h3>Or Create an account {{ 'for-hot-deal.png' | asset_url | img_tag }}</h3>
+        <div class="row create-buttons">
+          <div class="col-sm-4 col-xs-12">
+            {{ 'self-tanners.jpg' | asset_url | img_tag }}
+            <h3>Self tanners</h3>
+            <ul>
+              <li>VIP customer status</li>
+              <li>Access to great deals</li>
+              <li>Promotions from your favourite brands</li>
+            </ul>
+            <a href="#create-self-tanners-account" onclick="showRetailSignupFormForm();" class="btn">Create account</a>
+          </div>
+          <div class="col-sm-4 col-xs-12">
+            {{ 'trade-pros.jpg' | asset_url | img_tag }}
+            <h3>Trade pros</h3>
+            <ul>
+              <li>View trade pricing</li>
+              <li>Access to great deals</li>
+              <li>Promotions from your favourite brands</li>
+            </ul>
+            <a href="#create-trade-pros-account" onclick="showProSignupFormForm();" class="btn">Create account</a>
+          </div>
+          <div class="col-sm-4 col-xs-12">
+            {{ 'distributor.jpg' | asset_url | img_tag }}
+            <h3>Wholesalers</h3>
+            <ul>
+              <li>View distributor pricing</li>
+              <li>Access to great deals</li>
+              <li>Save time & order online easily</li>
+            </ul>
+            <a href="#create-wholesalers-account" onclick="showWholeSaleSignupFormForm();" class="btn">Create account</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="create-self-tanners-account" style="display: none;">
+        <div class="create-account-buttons">
+          <h3>Or Create an account {{ 'for-hot-deal.png' | asset_url | img_tag }}</h3>
+          <div class="row create-buttons">
+            <div class="col-sm-4 col-xs-12 active">
+              {{ 'self-tanners.jpg' | asset_url | img_tag }}
+              <h3>Self tanners</h3>
+              <ul>
+                <li>VIP customer status</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-self-tanners-account" onclick="showRetailSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 none-active">
+              {{ 'trade-pros.jpg' | asset_url | img_tag }}
+              <h3>Trade pros</h3>
+              <ul>
+                <li>View trade pricing</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-trade-pros-account" onclick="showProSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 none-active">
+              {{ 'distributor.jpg' | asset_url | img_tag }}
+              <h3>Wholesalers</h3>
+              <ul>
+                <li>View distributor pricing</li>
+                <li>Access to great deals</li>
+                <li>Save time & order online easily</li>
+              </ul>
+              <a href="#create-wholesalers-account" onclick="showWholeSaleSignupFormForm();" class="btn">Create account</a>
+            </div>
+          </div>
+        </div>
+        <h3 id="create-self-tanners-account-start">Create your account & access all our amazing brands</h3>
+        {% comment %}
+          This form must use 'create_customer'
+        {% endcomment %}
+        {% form 'create_customer' %}
+        {% include 'form-errors-custom' %}
+        <input type="hidden" value="{{settings.store_country}}" name="customer[note][country]">
+        <input type="hidden" value="Self Tanners" name="customer[note][customer_type]">
+        <div id="first_name">
+          <label for="first_name">First Name<em>*</em></label>
+          <input type="text" value="" name="customer[first_name]" id="first_name" {% if form.errors contains "first_name" %} class="error"{% endif %} data-validation="required">
+        </div>
+
+        <div id="last_name">
+          <label for="last_name">Last Name<em>*</em></label>
+          <input type="text" value="" name="customer[last_name]" id="last_name" {% if form.errors contains "last_name" %} class="error"{% endif %} data-validation="required">
+        </div>
+
+        <div id="email">
+          <label for="email">Email Address<em>*</em></label>
+          <input type="email" value="" name="customer[email]" id="email" {% if form.errors contains "email" %} class="error"{% endif %}  data-validation="email">
+        </div>
+
+        <div id="create_password">
+          <label for="password">Password<em>*</em></label>
+          <input type="password" value="" name="customer[password]" id="create_password" {% if form.errors contains "password" %} class="error"{% endif %} data-validation="length" data-validation-length="min6">
+        </div>
+
+        <div id="select-brands">
+          <label>Select the Brands you would like to receive special deals from<em>*</em></label>
+          <ul class="select-brands">
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_minetan]" checked>
+              {{ 'contact-newsletter-minetan.jpg' | asset_url | img_tag }}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_taneasy]" checked>
+              {{ 'contact-newsletter-taneasy.jpg' | asset_url | img_tag }}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_btan]" checked>
+              {{ 'contact-newsletter-btan.jpg' | asset_url | img_tag }}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_pure]" checked>
+              {{ 'contact-newsletter-pure.jpg' | asset_url | img_tag }}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_plabel]" checked>
+              {{ 'contact-newsletter-plabel.jpg' | asset_url | img_tag }}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_sttropez]" checked>
+              {{ 'contact-newsletter-sttropez.jpg' | asset_url | img_tag }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="action-btn">
+          <p><input type="submit" value="Create an Account" class="btn"></p>
+        </div>
+        {% endform %}
+      </div>
+
+      <div id="create-trade-pros-account" style="display: none;">
+        <div class="create-account-buttons">
+          <h3>Or Create an account {{ 'for-hot-deal.png' | asset_url | img_tag }}</h3>
+          <div class="row create-buttons">
+            <div class="col-sm-4 col-xs-12 none-active">
+              {{ 'self-tanners.jpg' | asset_url | img_tag }}
+              <h3>Self tanners</h3>
+              <ul>
+                <li>VIP customer status</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-self-tanners-account" onclick="showRetailSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 active">
+              {{ 'trade-pros.jpg' | asset_url | img_tag }}
+              <h3>Trade pros</h3>
+              <ul>
+                <li>View trade pricing</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-trade-pros-account" onclick="showProSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 none-active">
+              {{ 'distributor.jpg' | asset_url | img_tag }}
+              <h3>Wholesalers</h3>
+              <ul>
+                <li>View distributor pricing</li>
+                <li>Access to great deals</li>
+                <li>Save time & order online easily</li>
+              </ul>
+              <a href="#create-wholesalers-account" onclick="showWholeSaleSignupFormForm();" class="btn">Create account</a>
+            </div>
+          </div>
+        </div>
+        <h3 id="create-trade-pros-account-start">Create your pro account & access all our amazing brands</h3>
+        {% comment %}
+          This form must use 'create_customer'
+        {% endcomment %}
+        {% form 'create_customer' %}
+        {% include 'form-errors-custom' %}
+        <input type="hidden" value="{{settings.store_country}}" name="customer[note][country]">
+        <input type="hidden" value="Trade Pros" name="customer[note][customer_type]">
+        <input type="hidden" value="PRO" name="customer[tags]" id="tags">
+        <div id="first_name">
+          <label for="first_name">First Name<em>*</em></label>
+          <input type="text" value="" name="customer[first_name]" id="first_name" {% if form.errors contains "first_name" %} class="error"{% endif %} data-validation="required">
+        </div>
+
+        <div id="last_name">
+          <label for="last_name">Last Name<em>*</em></label>
+          <input type="text" value="" name="customer[last_name]" id="last_name" {% if form.errors contains "last_name" %} class="error"{% endif %} data-validation="required">
+        </div>
+
+        <div id="email">
+          <label for="email">Email Address<em>*</em></label>
+          <input type="email" value="" name="customer[email]" id="email" {% if form.errors contains "email" %} class="error"{% endif %}  data-validation="email">
+        </div>
+
+        <div id="business">
+          <label for="business">Business Name</label>
+          <input type="text" value="" name="customer[note][business_name]" id="business">
+        </div>
+
+        <div id="business_number">
+          <label for="business_number">Business Registration Number</label>
+          <input type="text" value="" name="customer[note][business_registration_number]" id="business_number">
+        </div>
+
+        <div id="phone">
+          <label for="phone">Phone Number</label>
+          <input type="text" value="" name="customer[note][phone_number]" id="phone">
+        </div>
+
+        <div id="create_password">
+          <label for="password">Password<em>*</em></label>
+          <input type="password" value="" name="customer[password]" id="create_password" {% if form.errors contains "password" %} class="error"{% endif %} data-validation="required">
+        </div>
+
+        <div id="select-brands">
+          <label>Select the Brands you would like to receive special deals from<em>*</em></label>
+          <ul class="select-brands">
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_minetan]" checked>
+              {{ 'contact-newsletter-minetan.jpg' | asset_url | img_tag }}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_taneasy]" checked>
+              {{ 'contact-newsletter-taneasy.jpg' | asset_url | img_tag }}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_btan]" checked>
+              {{ 'contact-newsletter-btan.jpg' | asset_url | img_tag }}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_pure]" checked>
+              {{ 'contact-newsletter-pure.jpg' | asset_url | img_tag }}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_plabel]" checked>
+              {{ 'contact-newsletter-plabel.jpg' | asset_url | img_tag }}
+            </li>
+            <li>
+              <input type="checkbox" value="yes" name="customer[note][deal_from_sttropez]" checked>
+              {{ 'contact-newsletter-sttropez.jpg' | asset_url | img_tag }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="action-btn">
+          <p><input type="submit" value="Create an Account" class="btn"></p>
+        </div>
+        {% endform %}
+      </div>
+
+      <div id="create-wholesalers-account" style="display: none;">
+        <div class="create-account-buttons">
+          <h3>Or Create an account {{ 'for-hot-deal.png' | asset_url | img_tag }}</h3>
+          <div class="row create-buttons">
+            <div class="col-sm-4 col-xs-12 none-active">
+              {{ 'self-tanners.jpg' | asset_url | img_tag }}
+              <h3>Self tanners</h3>
+              <ul>
+                <li>VIP customer status</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-self-tanners-account" onclick="showRetailSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 none-active">
+              {{ 'trade-pros.jpg' | asset_url | img_tag }}
+              <h3>Trade pros</h3>
+              <ul>
+                <li>View trade pricing</li>
+                <li>Access to great deals</li>
+                <li>Promotions from your favourite brands</li>
+              </ul>
+              <a href="#create-trade-pros-account" onclick="showProSignupFormForm();" class="btn">Create account</a>
+            </div>
+            <div class="col-sm-4 col-xs-12 active">
+              {{ 'distributor.jpg' | asset_url | img_tag }}
+              <h3>Wholesalers</h3>
+              <ul>
+                <li>View distributor pricing</li>
+                <li>Access to great deals</li>
+                <li>Save time & order online easily</li>
+              </ul>
+              <a href="#create-wholesalers-account" onclick="showWholeSaleSignupFormForm();" class="btn">Create account</a>
+            </div>
+          </div>
+        </div>
+        <h3 id="create-wholesalers-account-start">Request a distribution account for all our amazing brands</h3>
+        {% form 'contact' %}
+
+        {% comment %}
+          Successful message
+        {% endcomment %}
+        {% if form.posted_successfully? %}
+        <p class="note form-success">
+          Success! Your enquiry has been submitted. We'll get back to you as soon as possible.
+        </p>
+        {% endif %}
+
+        {% include 'form-errors-custom' %}
+
+        <div id="contactFormWrapper">
+          <div>
+            <label for="contactFormName">Name<em>*</em></label>
+            <input type="text" id="contactFormName" name="contact[name]" autocapitalize="words" placeholder="{{ settings.contact_your_name }}" data-validation="required">
+          </div>
+
+          <div>
+            <label for="contactFormEmail">Email<em>*</em></label>
+            <input type="email" name="contact[email]" id="contactFormEmail" autocorrect="off" autocapitalize="off" placeholder="{{ settings.contact_your_email }}" data-validation="email">
+          </div>
+
+          <div>
+            <label for="contactFormBusinessName">Business Name<em>*</em></label>
+            <input type="text" name="contact[business_name]" id="contactFormBusinessName" autocorrect="off" autocapitalize="off" data-validation="required">
+          </div>
+
+          <div>
+            <label for="contactFormBusinessNumber">Business Registration Number</label>
+            <input type="text" name="contact[business_registration_number]" id="contactFormBusinessNumber" autocorrect="off" autocapitalize="off">
+          </div>
+
+          <div>
+            <label for="contactFormPhone">Phone Number<em>*</em></label>
+            <input type="tel" name="contact[phone]" id="contactFormPhone" pattern="[0-9]*" placeholder="{{ settings.contact_phone_number }}" data-validation="required">
+          </div>
+
+          <input type="hidden" name="contact[body]" id="contactFormMessage" value="Request a distribute account">
+
+          <div class="action-btn">
+            <p><input type="submit" value="Enquire" class="btn"></p>
+          </div>
+        </div>
+        {% endform %}
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  /*
+    Show/hide the recover password form when requested.
+    I'd suggest using some CSS3 transitions to make this change look cool,
+    but this gets the job done for now.
+  */
+  function showRecoverPasswordForm() {
+    document.getElementById('recover_password').style.display = 'block';
+    document.getElementById('customer_login').style.display='none';
+  }
+
+  function hideRecoverPasswordForm() {
+    document.getElementById('recover_password').style.display = 'none';
+    document.getElementById('customer_login').style.display = 'block';
+  }
+
+  function showRetailSignupFormForm() {
+    document.getElementById('create-self-tanners-account').style.display = 'block';
+    document.getElementById('create-account-buttons').style.display = 'none';
+    document.getElementById('create-trade-pros-account').style.display = 'none';
+    document.getElementById('create-wholesalers-account').style.display = 'none';
+  }
+
+  function showProSignupFormForm() {
+    document.getElementById('create-trade-pros-account').style.display = 'block';
+    document.getElementById('create-self-tanners-account').style.display = 'none';
+    document.getElementById('create-account-buttons').style.display = 'none';
+    document.getElementById('create-wholesalers-account').style.display = 'none';
+  }
+
+  function showWholeSaleSignupFormForm() {
+    document.getElementById('create-wholesalers-account').style.display = 'block';
+    document.getElementById('create-trade-pros-account').style.display = 'none';
+    document.getElementById('create-self-tanners-account').style.display = 'none';
+    document.getElementById('create-account-buttons').style.display = 'none';
+  }
+
+  // Allow deep linking to the recover password form
+  if (window.location.hash == '#recover') { showRecoverPasswordForm() }
+  if (window.location.hash == '#create-self-tanners-account-start') { showRetailSignupFormForm() }
+  if (window.location.hash == '#create-trade-pros-account-start') { showProSignupFormForm() }
+  if (window.location.hash == '#create-wholesalers-account-start') { showWholeSaleSignupFormForm() }
+
+  // reset_success is only true when the reset form is
+  {% if reset_success %}
+    document.getElementById('resetSuccess').style.display = 'block';
+  {% endif %}
+</script>
+
+<script>
+  $(document).ready(function($) {
+    var url = window.location.href.toLowerCase();
+
+    if (url.indexOf("uk.store") >= 0 || url.indexOf("store-minetanbodyskin") >= 0) {
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_sttropez]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_sttropez]"]').prop('checked', false);
+
+      $('#create-trade-pros-account input[name="customer[note][deal_from_sttropez]"]').parent().hide();
+      $('#create-trade-pros-account input[name="customer[note][deal_from_sttropez]"]').prop('checked', false);
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+    }
+    if (url.indexOf("us.store") >= 0 || url.indexOf("us-store") >= 0) {
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+    }
+    if (url.indexOf("eu.store") >= 0 || url.indexOf("eu-store") >= 0) {
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_sttropez]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_sttropez]"]').prop('checked', false);
+
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-trade-pros-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+      $('#create-trade-pros-account input[name="customer[note][deal_from_sttropez]"]').parent().hide();
+      $('#create-trade-pros-account input[name="customer[note][deal_from_sttropez]"]').prop('checked', false);
+    }
+    if (url.indexOf("au.store") >= 0 || url.indexOf("au-store") >= 0) {
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_taneasy]"]').prop('checked', false);
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').parent().hide();
+      $('#create-self-tanners-account input[name="customer[note][deal_from_plabel]"]').prop('checked', false);
+    }
+    $.validate();
+  });
+</script>
+<script>
+  $(document).ready(function($) {
+    var url = window.location.href.toLowerCase();
+    var current_country = '';
+    var country_arr = ['au', 'us', 'uk', 'eu'];
+
+    $.each( country_arr, function( i, val ) {
+      if (url.indexOf(val + ".store") >= 0) {
+        current_country = val;
+        return false;
+      }
+    });
+
+    var anchors = $('.header-top .brands ul li a');
+
+    for (var i = 0; i < anchors.length; i++) {
+      if (anchors[i].href.length > 0) {
+        anchors[i].href = anchors[i].href + '?country=' + current_country;
+      }
+    }
+  });
+</script>

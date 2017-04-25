@@ -1,0 +1,83 @@
+{% assign i = forloop.index %}
+{% capture style_dropdown_mega_menu %}style_dropdown_mega_menu_{{ i }}{% endcapture %}
+<div class="container {{ link.handle | append: '-menu' }} {% if settings[style_dropdown_mega_menu] == "style_1" %}style_1{% elsif settings[style_dropdown_mega_menu] == "style_2" %}style_2{% elsif settings[style_dropdown_mega_menu] == "style_3" %}style_3{% else %}style_4{% endif %}">
+  
+    {% assign prefix = "" %}
+    {% if menu_prefix != nil %}
+    {% assign prefix = menu_prefix | append: "-" %}
+    {% endif %}
+    {% assign link_handle = link.handle | prepend: prefix %}
+
+  <div class="col-1 parent-mega-menu">
+
+    <div class="shop-all-bar">
+      <a href="/collections/mine-self-tan">
+      <img src={{ 'shopall-icon.png' | asset_img_url }}> 
+        <span class="shop-bold">SHOP</span> 
+        <span class="shop"> ALL </span>
+      </a>
+    </div>
+
+    {% for l in linklists[link_handle].links %}
+    <div class="inner">
+      <!-- Menu level 2 -->
+      <a id="{{ l.handle }}" href="{{ l.url }}"{% if l.active %} class="current"{% endif %}>
+        <span>{{ l.title }}</span>
+        {% if settings[style_dropdown_mega_menu] == "style_3" %}
+        {% for collection in collections %}
+          {% if collection.handle ==  l.handle %}
+            {{ collection.image.src | collection_img_url: 'large' | img_tag: collection_title }}
+          {% endif %}
+        {% endfor %}
+        {% endif %}
+        <div class="mask"></div>
+      </a>
+      
+      {% if  linklists[l.handle] != empty %}
+      <ul class="dropdown">
+      {% for child_l in linklists[l.handle].links %}
+      <!-- Menu level 3 -->
+        <li>
+          <a href="{{ child_l.url }}"{% if child_l.active %} class="current"{% endif %}>
+            <span>{{ child_l.title }} </span>
+          </a>
+        </li>
+      {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  
+  {% unless settings[style_dropdown_mega_menu] == "style_3" %}
+  <div class="col-2">
+    {% if settings[style_dropdown_mega_menu] == "style_1" or settings[style_dropdown_mega_menu] == "style_2" %}
+    <div class="col-left">
+      {% if settings[style_dropdown_mega_menu] == "style_1" %}
+        {% include 'mega-menu-featured-product' %}
+      {% elsif settings[style_dropdown_mega_menu] == "style_2" %}
+        {% capture dropdown_menu_image %}dropdown_{{ i }}_menu_image_1.jpg{% endcapture %}
+        {% capture dropdown_menu_link_image %}dropdown_{{ i }}_menu_link_image_1{% endcapture %}
+        <a href="{{ settings[dropdown_menu_link_image] }}">
+          <img src="{{ dropdown_menu_image | asset_url }}" alt=""/>
+        </a>
+      
+        {% capture dropdown_menu_image_2 %}dropdown_{{ i }}_menu_image_2.jpg{% endcapture %}
+        {% capture dropdown_menu_link_image_2 %}dropdown_{{ i }}_menu_link_image_2{% endcapture %}
+        <a href="{{ settings[dropdown_menu_link_image_2] }}">
+          <img src="{{ dropdown_menu_image_2 | asset_url }}" alt=""/>
+        </a>
+      {% endif %}
+    </div>
+    {% endif %}
+  
+    <div class="col-right">
+      {% capture dropdown_menu_image_3 %}dropdown_{{ i }}_menu_image_3.jpg{% endcapture %}
+      {% capture dropdown_menu_link_image_3 %}dropdown_{{ i }}_menu_link_image_3{% endcapture %}
+      <a href="{{ settings[dropdown_menu_link_image_3] }}">
+        <img src="{{ dropdown_menu_image_3 | asset_url }}" alt=""/>
+      </a>
+    </div>
+  </div>
+  {% endunless %}
+</div>

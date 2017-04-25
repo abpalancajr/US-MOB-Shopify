@@ -1,0 +1,37 @@
+<header class="site-header taneasy sticky" role="banner">
+  <div class="header-top">
+    <div class="container">
+      {% include 'header-top-all-brands' %}
+    </div>
+  </div>
+  	
+  <div class="header-bottom">
+    <div class="container">
+      <div class="header-panel">
+        <div class="row">
+          <h1 class="header-logo col-xs-4">
+            <div class="menu-block visible-phone"><!-- start Navigation Mobile  -->
+              <div id="showLeftPush"></div>
+            </div><!-- end Navigation Mobile  -->
+            <a href="/collections/tan-easy-shop">
+              {{ 'taneasy-logo.png' | asset_url | img_tag: shop.name }}
+              {% if settings.enable_retina %}
+              	{{ 'taneasy-logo.png' | asset_url | img_tag: shop.name }}
+              {% endif %}
+            </a>
+          </h1>
+          <!-- <div class="nav-search on">{% include 'search-bar' %}</div> -->
+        </div>
+      </div>
+    </div>
+    
+    <nav class="nav-bar" role="navigation">
+      <div class="header-logo-fix">
+        <a href="http://new.taneasyprotools.com">{{ 'taneasy-logo.png' | asset_url | img_tag: shop.name }}</a>
+      </div>
+      <div class="container">
+        {% include 'taneasy-nav' %}     
+      </div>
+    </nav>
+  </div>
+</header>

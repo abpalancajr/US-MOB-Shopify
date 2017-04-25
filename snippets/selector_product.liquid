@@ -1,0 +1,46 @@
+{% if selector_product == blank %}
+<div class="swatch error">
+  <p>You must include the snippet swatch.liquid with the name of a product option.</p> 
+  <p>Use: <code>{% raw %}{% include 'swatch' with 'name of your product option here' %}{% endraw %}</code></p>
+  <p>Example: <code>{% raw %}{% include 'swatch' with 'Color' %}{% endraw %}</code></p>
+</div>
+{% else %}
+
+{% assign found_option = false %}
+{% assign option_index = 0 %}
+
+{% for option in product.options %}
+  {% if option == selector_product %}
+    {% assign found_option = true %}
+    {% assign option_index = forloop.index0 %}
+  {% endif %}
+{% endfor %}
+
+{% unless found_option %}
+<div class="swatch error">
+  <p>You included the snippet swatch.liquid with the name of a product option — <code>'{{ swatch }}'</code> — that does not belong to your product.</p>
+  <p>Use <code>{% raw %}{% include 'swatch' with 'name of your product option here' %}{% endraw %}</code></p>
+  <p>Example: <code>{% raw %}{% include 'swatch' with 'Color' %}{% endraw %}</code></p>
+  <p><strong>This is case-sensitive!</strong> Do not put in <code>'color'</code> if your product option name is <code>'Color'</code>.</p>
+</div>
+{% else %}
+<div class="swatch clearfix" data-option-index="{{ option_index }}" >
+  <div class="header">{{ selector_product }}</div>
+  <input type="hidden" id="selector-{{ option_index }}-value" value="" />
+    <div class="productOptionViewSelect">
+      <select class="validation selector-opition nice-select" id="selector-{{ option_index }}" name="">
+
+        <option value="" selected="selected"> -- Please Choose an Option --   </option>
+          {% for variant in product.variants %}
+            {% include 'bold-variant' with variant, hide_action: 'skip'  %}
+            {% assign value = variant.options[option_index] %}
+              <option value={{ variant.id }}>{{ value | escape }}</option>
+          {% endfor %}
+
+      </select> 
+  </div>
+</div>
+
+{% endunless %}
+
+{% endif %}

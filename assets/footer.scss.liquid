@@ -1,0 +1,979 @@
+/*----------  BTAN FOOTER Start  ----------*/
+.site-footer.footer-btan {
+  background: #383838;
+
+  .container {
+    @media screen and (max-width: 1024px) {
+      padding-bottom: 15px;
+    }
+
+    .footer-top {
+      padding-bottom: 0px;
+      padding-top: 20px;
+
+      li {
+        margin-bottom: 0;
+
+        a {
+          font-size: 11px;
+          font-family: 'book';
+          letter-spacing: 0;
+          text-decoration: none;
+          -webkit-font-smoothing: initial;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .col-1 {
+        @media screen and (min-width: 1025px) {
+          width: 22%;
+        }
+
+        ul {
+          li {
+            a {
+              color: rgb(255, 255, 255);
+              text-transform: uppercase;
+            }
+          }
+        } 
+      }
+
+      .col-2 {
+        @media screen and (min-width: 1025px) {
+          width: 22%;
+        }
+
+        ul {
+          li:first-child {
+            a {
+              color: rgb(255, 255, 255);
+            }
+          }
+        }
+      }
+
+      .col-3 {
+        @media screen and (min-width: 1025px) {
+          width: 22%;
+        }
+        
+        // Hide empty menu on mobile
+        @media screen and (max-width: 560px) {
+          display: none;
+        }
+
+        ul {
+          li:first-child {
+            a {
+              color: rgb(255, 255, 255);
+            }
+          }
+        }
+      }
+
+      .col-4 {
+        @media screen and (min-width: 1025px) {
+          width: 56%;
+        }
+
+        @media screen and (max-width: 1024px) {
+          width: 100% !important;
+          text-align: center;
+
+          > ul {
+            float: none;
+
+            > li {
+              text-align: center;
+            }
+          }
+        }
+
+        .alibaba {
+          float: right;
+          clear: right;
+          text-align: right;
+          margin-top: 15px;
+          margin-bottom: 15px;
+
+          @media screen and (max-width: 1024px) {
+            float: none;
+            text-align: center;
+          }
+        }
+
+        .cosmoprof {
+          float: left;
+          clear: right;
+          margin-bottom: 15px;
+
+          @media screen and (max-width: 1024px) {
+            float: none;
+            text-align: center;
+          }
+
+          img {
+            width: 90px;
+          }
+        }
+
+        .taneasy-warranty {
+          float: right;
+          clear: right;
+          text-align: right;
+          margin-bottom: 10px;
+          margin-top: 20px;
+
+          @media screen and (max-width: 1024px) {
+            float: none;
+            text-align: center;
+          }
+
+          a {
+            color: white;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+
+        .social-networks {
+          display: inline-block;
+          float: left;
+          margin: 0;
+          padding: 0;
+          list-style: none;
+          vertical-align: top;
+
+          @media screen and (max-width: 1024px) {
+            float: none;
+            text-align: center;
+          }    
+
+          li {
+            float: left;
+            margin: 5px;
+
+            a {
+              float: left;
+              overflow: hidden;
+              width: 18px;
+              height: 15px;
+              margin: 5px 4px;
+              text-indent: -9999px;
+
+              &.facebook {
+                background: url(facebook-topbar-icon-brown.png) no-repeat;
+                background-position: center center;
+                background-size: contain;
+              } 
+
+              &.pinterest {
+                background: url(pinterest-topbar-icon-brown.png) no-repeat;
+                background-position: center center;
+                background-size: contain;
+              }
+
+              &.linkedin {
+                background: url(linkedin-topbar-icon-brown.png) no-repeat;
+                background-position: center center;
+                background-size: contain;
+              }
+
+              &.youtube {
+                background: url(youtube-topbar-icon-brown.png) no-repeat;
+                background-position: center center;
+                background-size: contain;
+              }
+
+              &.instagram {
+                background: url(instagram-topbar-icon-brown.png) no-repeat;
+                background-position: center center;
+                background-size: contain;
+              }
+
+              &.twitter {
+                background: url(twitter-topbar-icon-brown.png) no-repeat;
+                background-position: center center;
+                background-size: contain;            
+              }
+
+              &.search {
+                background: url(search-topbar-icon-brown.png) no-repeat;
+                background-size: contain;
+              }
+            }
+          }
+        } 
+      }
+
+      .col-5 {
+        .taneasy-warranty {
+          a {
+            float: right;
+            line-height: 4;
+            color: white;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+
+      .col-1,
+      .col-2,
+      .col-3,
+      .col-4 {
+        box-sizing: border-box;
+
+        > ul {
+          > li {
+            a {
+              text-decoration: none;
+              -webkit-font-smoothing: initial;
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .very-bottom-footer {
+    background: #383838;
+
+    .text,
+    .copy {
+      text-transform: initial;
+    }
+  }
+}
+/*----------  BTAN FOOTER End  ----------*/
+
+/*----------  STTROPEZ FOOTER Start  ----------*/
+.site-footer.footer-sttropez {
+  background: url(pre-footer.png) left top repeat-x;
+  border-top: 1px solid #0093b2;
+  background-color: white;
+
+  .footer-top {
+    .row {
+      .social-networks {
+        li {
+          a {
+            &.facebook {
+              background-image: url(facebook-topbar-icon-blue.png);
+            }
+
+            &.pinterest {
+              background-image: url(pinterest-topbar-icon-blue.png);
+            }
+
+            &.linkedin {
+              background-image: url(linkedin-topbar-icon-blue.png);
+            }
+
+            &.youtube {
+              background-image: url(youtube-topbar-icon-blue.png);
+            }
+
+            &.instagram {
+              background-image: url(instagram-topbar-icon-blue.png);
+            }
+
+            &.twitter {
+              background-image: url(twitter-topbar-icon-blue.png);            
+            }
+
+          }
+        }
+      }
+    }
+  }
+
+  .very-bottom-footer {
+    background: #ebebeb;
+    border-top: 1px solid #0093b2;
+
+    .copyright {
+      line-height: 35px;
+      float: left;
+      
+      .text {
+        img {
+          width: 23px;
+          margin-right: 5px;
+        }
+
+        .country-selector {
+          color: #2d2d2d;
+          margin-right: 10px;
+
+          &:hover {
+            color: #2d2d2d;
+          }
+        }
+      }
+    }
+  }
+}
+/*----------  STTROPEZ FOOTER End  ----------*/
+
+/*----------  TANEASY FOOTER Start  ----------*/
+.site-footer.footer-taneasy {
+  background: #383838;
+
+  .container {
+    @media screen and (max-width: 1024px) {
+      padding-bottom: 15px;
+    }
+
+    .footer-top {
+      padding-bottom: 0px;
+      padding-top: 20px;
+
+      li {
+        margin-bottom: 0;
+
+        a {
+          font-size: 11px;
+          font-family: 'book';
+          letter-spacing: 0;
+          text-decoration: none;
+          -webkit-font-smoothing: initial;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .col-1 {
+        @media screen and (min-width: 1025px) {
+          width: 22%;
+        }
+
+        ul {
+          li {
+            a {
+              color: rgb(255, 255, 255);
+            }
+          }
+        } 
+      }
+
+      .col-2 {
+        @media screen and (min-width: 1025px) {
+          width: 22%;
+        }
+
+        ul {
+          li:first-child {
+            a {
+              color: rgb(255, 255, 255);
+            }
+          }
+        }
+      }
+
+      .col-4 {
+        @media screen and (max-width: 1024px) {
+          width: 100% !important;
+          text-align: center;
+
+          > ul {
+            float: none;
+
+            > li {
+              text-align: center;
+            }
+          }
+        }
+
+        .alibaba {
+          float: right;
+          clear: right;
+          text-align: right;
+          margin-top: 15px;
+          margin-bottom: 15px;
+
+          @media screen and (max-width: 1024px) {
+            float: none;
+            text-align: center;
+          }
+        }
+
+        .cosmoprof {
+          float: right;
+          clear: right;
+          text-align: right;
+
+          @media screen and (max-width: 1024px) {
+            float: none;
+            text-align: center;
+          }
+
+          img {
+            width: 90px;
+          }
+        }
+
+        .social-networks {
+          display: inline-block;
+          float: right;
+          margin: 0;
+          padding: 0;
+          list-style: none;
+          vertical-align: top;
+
+          @media screen and (max-width: 1024px) {
+            float: none;
+            text-align: center;
+          }
+
+          li {
+            float: left;
+            margin: 5px;
+
+            a {
+              float: left;
+              overflow: hidden;
+              width: 18px;
+              height: 15px;
+              margin: 5px 4px;
+              text-indent: -9999px;
+
+              &.youtube {
+                background: url(youtube-topbar-taneasy.png) no-repeat;
+                background-position: center center;
+                background-size: contain;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .very-bottom-footer {
+    background: #383838;
+  }
+}
+/*----------  TANEASY FOOTER End  ----------*/
+
+/*----------  MINETAN FOOTER Start  ----------*/
+.site-footer.footer-mine {
+  padding-top: 25px;
+
+  .container {
+    @media screen and (max-width: 1024px) {
+      padding-bottom: 15px;
+    }
+
+    .footer-top {
+      padding-bottom: 0;
+
+      ul {
+        margin-bottom: 10px;
+        
+        li {
+          margin-bottom: 0;
+
+          a {
+            font-size: 11px;
+            font-family: 'book';
+            letter-spacing: 0;
+            text-decoration: none;
+            -webkit-font-smoothing: initial;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+
+      .minetan-footer-column-1 {
+        ul {
+          li {
+            a {
+              color: rgb(255, 255, 255);
+            }
+          }
+        }
+      }
+
+      .minetan-footer-column-2 {
+        ul {
+          li:first-child {
+            a {
+              color: rgb(255, 255, 255);
+            }
+          }
+        }
+      }
+
+      .minetan-footer-column-3 {
+        ul {
+          li:first-child, li:nth-child(2) {
+            a {
+              color: rgb(255, 255, 255);
+            }
+          }
+        }
+      }
+
+      .col-4 {
+        @media screen and (max-width: 1024px) {
+          width: 100% !important;
+          text-align: center;
+
+          > ul {
+            float: none;
+
+            > li {
+              text-align: center;
+            }
+          }
+        }
+      }
+
+      .cosmoprof {
+        float: right;
+        clear: right;
+        text-align: right;
+
+        @media screen and (max-width: 1024px) {
+          float: none;
+          text-align: center;
+        }
+
+        img {
+          width: 90px;
+        }
+      }
+
+      .taneasy-warranty {
+        float: right;
+        clear: right;
+        text-align: right;
+        margin-top: 45px;
+
+        @media screen and (max-width: 1024px) {
+          float: none;
+          text-align: center;
+        }
+
+        a {
+          color: white;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .social-networks {
+        @media screen and (max-width: 1024px) {
+          float: none;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+/*----------  MINETAN FOOTER End  ----------*/
+
+/*----------  FOOTER ALL BRANDS Start  ----------*/
+.site-footer {
+  padding-top: 0;
+  background: #303030;
+  padding-bottom: 0;
+
+  /**
+   * Quickview Shopify styling
+   * ============================= */
+
+  // For all screen
+  #quickViewOverlay_CountrySelector {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #000 !important;
+    opacity: 0.7 !important;
+    display: none;
+    z-index: 2000;
+  }
+
+  #quickViewResponseData_CountrySelector {
+    position: fixed;
+    background: white;
+    top: calc(50% - 113px);
+    left: calc(50% - 175px);
+    width: 350px;
+    height: 226px;
+    z-index: 3000;
+    display: none;
+    overflow: auto;
+    border: 0;
+    justify-content: center;
+    align-content: center;
+    padding: 30px;
+    box-sizing: border-box;
+
+    input,
+    select,
+    button {
+      outline: none !important;
+    }
+
+    .close-quickview {
+      position: fixed;
+      top: calc(50% - 113px);
+      right: calc(50% - 175px);
+      font-size: 30px;
+      display: flex;
+      align-items: center;
+      height: 45px;
+      width: 50px;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100000;
+    }
+
+    .title {
+      font-family: 'book-medium';
+      text-align: center;
+      color: black;
+      margin: 0 0 20px 0;
+      font-size: 14px;
+    }
+
+    .country-selector {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+
+
+      li {
+        width: 100%;
+        cursor: pointer;
+        color: black;
+        font-family: 'book';
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 22px;
+
+        a {
+          color: black;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .flag {
+          width: 30px;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+
+  // For mobile only
+  // @media screen and (max-width: 480px) and (orientation: portrait), screen and (max-width: 750px) and (min-device-width: 751px) {
+  //   #quickViewResponseData_CountrySelector {
+  //     width: 290px;
+  //     height: 190px;
+  //     top: calc(50% - 95px);
+  //     left: calc(50% - 145px);
+  //     align-items: flex-start !important;
+  //     padding: 0 10px;
+
+  //     .close-quickview {
+  //       top: calc(50% - 95px);
+  //       right: calc(50% - 145px);
+  //     }
+
+  //     .title {
+  //       margin-top: 10px;
+  //     }
+  //   }
+  // }
+
+  // @media screen and (max-width: 750px) and (max-device-width: 750px) and (orientation: landscape) {
+  //   #quickViewResponseData_CountrySelector {
+  //     top: calc(50% - 95px);
+  //     left: calc(50% - 150px);
+  //     width: 300px;
+  //     height: 190px;
+  //     overflow: auto;
+  //     align-items: flex-start !important;
+  //     padding: 0 10px;
+      
+  //     .close-quickview {
+  //       top: calc(50% - 95px);
+  //       right: calc(50% - 150px);
+  //     }
+
+  //     .title {
+  //       margin-top: 10px;
+  //     }
+  //   }
+  // }
+
+  // // For tablet and desktop
+  // @media screen and (min-width: 751px) and (min-device-width: 751px) {
+  //   #quickViewResponseData_CountrySelector {
+  //   }
+  // }
+}
+/*----------  FOOTER ALL BRANDS End  ----------*/
+
+.footer-top {
+  font-family: 'book';
+  font-size: 12px;
+  line-height: 25px;
+
+  .col-1, .col-2, .col-3 {
+    width: 15%;
+  }
+
+  .col-4 {
+    width: 55%;
+
+    .social-networks {
+      display: inline-block;
+      float: right;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      vertical-align: top;
+
+      li {
+        float: left;
+        margin: 5px;
+
+        a {
+          float: left;
+          overflow: hidden;
+          width: 18px;
+          height: 15px;
+          margin: 5px 4px;
+          text-indent: -9999px;
+
+          &.facebook {
+            background: url(facebook-topbar-icon.png) no-repeat;
+            background-position: center center;
+            background-size: contain;
+          } 
+
+          &.pinterest {
+            background: url(pinterest-topbar-icon.png) no-repeat;
+            background-position: center center;
+            background-size: contain;
+          }
+
+          &.linkedin {
+            background: url(linkedin-topbar-icon.png) no-repeat;
+            background-position: center center;
+            background-size: contain;
+          }
+
+          &.youtube {
+            background: url(youtube-topbar-icon.png) no-repeat;
+            background-position: center center;
+            background-size: contain;
+          }
+
+          &.instagram {
+            background: url(instagram-topbar-icon.png) no-repeat;
+            background-position: center center;
+            background-size: contain;
+          }
+
+          &.twitter {
+            background: url(twitter-topbar-icon.png) no-repeat;
+            background-position: center center;
+            background-size: contain;            
+          }
+
+          &.search {
+            background: url(search-topbar-icon.png) no-repeat;
+            background-size: contain;
+          }
+        }
+
+
+        &:last-of-type {
+          @media screen and (min-width: 1025px) {
+            a {
+              margin: 5px 0 5px 4px;
+            }
+          }
+        }
+      }
+    } 
+  }
+
+  @media only screen and (max-width: 1024px) {
+    .col-1, .col-2, .col-3 {
+      width: 33.3%;
+    }
+
+    .col-4 {
+      width: 100%;
+    }
+  }
+
+  @media screen and (max-width: 560px) {
+    .col-1,
+    .col-2,
+    .col-3,
+    .col-4 {
+      width: 100% !important;
+      text-align: center;
+
+      > ul {
+        float: none;
+
+        > li {
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+.very-bottom-footer {
+  display: flex;
+  border-top: 1px solid #ddd;
+  flex-basis: 100%;
+  justify-content: center;
+  flex-flow: row wrap;
+  background: #303030;
+  width: 100%;
+  text-transform: uppercase;
+  font-family: 'book';
+
+  .container {
+    -webkit-font-smoothing: initial;
+
+    .footer-text {
+      text-transform: none;
+      font-size: 11px;
+      line-height: 35px;
+      display: block;
+      color: #878787;
+      font-family: 'book';
+      overflow: auto;
+      float: left;
+      @media screen and (max-width: 1024px) {
+        width: 100%;
+      }
+      
+      .brands {
+        float: left;
+        margin-bottom: 0;
+
+        > a {
+          @media screen and (max-width: 1024px) {
+            width: 100%;
+            clear: both;
+            display: block;
+          }
+        }
+
+        .flag {
+          width: 20px;
+          margin-right: 5px;
+
+          @media screen and (max-width: 1024px) {
+            float: none;
+            display: inline-block;
+          }
+        }
+
+        .country-selector {
+          margin: 0 20px 0 0;
+          font-family: 'book';
+          color: white;
+
+          @media screen and (max-width: 1024px) {
+            margin: 0;
+            text-align: center;
+            float: none;
+            display: inline-block;
+          }
+        }
+      }
+
+      .copyright {
+        float: right;
+        margin-bottom: 0;
+      }
+    }
+
+    @media only screen and (max-width: 1024px) {
+      .footer-text {
+        text-align: center;
+        width: 100%;
+
+        .brands {
+          float: none;
+        }
+
+        .copyright {
+          float: none;
+        }
+      }
+    }
+
+    .bottom-footer-menu {
+      text-align: center;
+      float: right;
+
+      @media only screen and (max-width: 1024px) {
+        width: 100%;
+      }
+
+      .menu {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        li {
+          font-size: 11px;
+          line-height: 35px;
+          display: inline-block;
+          margin-left: 20px;
+          min-width: 30px;
+
+          a, span {
+            color: #878787;
+          }
+
+          a:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}

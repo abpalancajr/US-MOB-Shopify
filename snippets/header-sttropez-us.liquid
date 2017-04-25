@@ -1,0 +1,68 @@
+<header class="site-header sttropez sttropez-us" role="banner">
+  <div class="header-top">
+    <div class="container">
+      {% include 'header-top-sttropez-us' %}
+    </div>
+  </div>
+  	
+  <div class="header-bottom">
+    <div class="container">
+      <div class="header-panel">
+          <div class="TopMenu">
+              <ul>
+                <li>
+                  <a href="/account">My Account</a>
+                </li>
+
+                <li>
+                  <a href="/pages/wish-list">Wish Lists</a>
+                </li>
+
+                {% if shop.customer_accounts_enabled %}
+                  {% if customer %}
+                    <li>
+                      {{ 'SIGN OUT' | customer_logout_link }}
+                    </li>
+                  {% else %}
+                    <li>
+                      <a href="/account/login" onclick="">Sign in</a> or <a href="/account/register" onclick="">Create an account</a>
+                    </li>
+                {% endif %}
+                {% endif %}
+                    <li class="cart-us">
+                      <a href="/cart" title="View Cart">
+                        <i class="icon icon-cart" title="View Cart">&nbsp;</i>
+                      </a>
+                    </li>
+                </ul>
+          </div>
+
+        <div class="row">
+          <h1 class="header-logo col-xs-4">
+            <div class="menu-block visible-phone"><!-- start Navigation Mobile  -->
+              <div id="showLeftPush"></div>
+            </div><!-- end Navigation Mobile  -->
+            
+            <a href="/collections/mine-professional">
+              {{ 'sttropez-us-professional_logo.png' | asset_url | img_tag: shop.name }}
+              {% if settings.enable_retina %}
+              	{{ 'sttropez-us-professional_logo.png' | asset_url | img_tag: shop.name }}
+              {% endif %}
+            </a>
+          </h1>
+          <div class="nav-search on">{% include 'search-bar' %}</div>
+        </div>
+
+      </div>
+    </div>
+    
+    <nav class="nav-bar" role="navigation" >
+<!--       <div class="header-logo-fix">
+        <a href="http://www.sttropezprofessional.com/">{{ 'sttropez-us-professional_logo.png' | asset_url | img_tag: shop.name }}</a>
+      </div> -->
+      <div class="container">
+        {% include 'sttropez-us-nav' %}     
+      </div>
+    </nav>
+  </div>
+</header>

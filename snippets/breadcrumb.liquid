@@ -1,0 +1,63 @@
+{% if settings.display_breadcrumb %}
+{% comment %}
+  Documentation - http://docs.shopify.com/support/your-website/navigation/creating-a-breadcrumb-navigation
+{% endcomment %}
+{% unless template == 'index' %}
+
+{% if template contains 'collection' %}
+<div class="row">  
+  <div class="block-row col-xs-12 center collection-image">    
+    {% if collection.image %}
+		<img src="{{ collection.image.src | collection_img_url: 'master' }}" alt="{{ collection.image.alt }}" width="100%" />
+	{% endif %}
+  </div>
+</div>
+{% else %}
+{% endif %}
+
+<div class="breadcrumb">
+  <a href="/collections/{{ homepage }}" title="Back to the frontpage">Home</a>  
+  {% if template contains 'product' %}  
+  {% if collection %}
+  <span class="arrow">/</span>  
+  {% if collection.handle %}
+  {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+  {{ collection.title | link_to: url }}
+  {% endif %}
+  {% endif %}
+  
+  <span class="arrow">/</span>
+  <span>{{ product.title }}</span>
+  
+  {% elsif template contains 'collection' and collection.handle %}
+  
+  {% if current_tags %}
+  <span class="arrow">/</span>
+  {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+  {{ collection.title | link_to: url }}
+  <span class="arrow">/</span>
+  <span>{{ current_tags.first }}</span>
+  {% else %}
+  <span class="arrow">/</span>
+  <span>{{ collection.title }}</span>
+  {% endif %}
+
+  {% elsif template == 'article' %}
+
+  <span class="arrow">/</span>
+  {{ blog.title | link_to: blog.url }}
+  <span class="arrow">/</span>
+  <span>{{ article.title }}</span>
+  
+  {% elsif template contains 'page' %}
+
+  <span class="arrow">/</span>
+  <span>{{ page.title }}</span>
+
+  {% else %}
+  <span class="arrow">/</span>
+  <span>{{ page_title }}</span>
+  {% endif %}
+</div>
+{% endunless %}
+{% endif %}

@@ -1,0 +1,92 @@
+{% if settings.show_tab == 'horizontal' %}
+<div class="panel-group">
+  <ul class="nav nav-tabs" id="myTab">
+    {% if settings.display_product_detail_description %}
+    <li class="active"><a data-toggle="tab" href="#collapse-tab1">{{ settings.product_description_title }}</a></li>
+    {% endif %}
+
+    {% assign productMetafields = product.metafields.product %}
+
+    {% if productMetafields.results %}
+    <li><a data-toggle="tab" href="#collapse-results">Results</a></li>
+    {% endif %}
+
+    {% if productMetafields.howtouse %}
+    <li><a data-toggle="tab" href="#collapse-howtouse">How To Use</a></li>
+    {% endif %}
+
+    {% if productMetafields.ingredients %}
+    <li><a data-toggle="tab" href="#collapse-ingredients">Ingredients</a></li>
+    {% endif %}
+    
+    {% if settings.display_custom_tab %}
+    <li><a data-toggle="tab" href="#collapse-tab2">{{ settings.custom_tab_title }}</a></li>
+    {% endif %}
+    
+    {% if settings.display_size_chart %}
+    <li><a data-toggle="tab" href="#collapse-tab3">{{ settings.custom_size_chart_title }}</a></li>
+    {% endif %}
+    
+    {% if settings.display_product_reviews %}       
+    <li><a data-toggle="tab" href="#collapse-tab4">{{ settings.product_review_title }}</a></li>
+    {% endif %}
+  </ul>
+
+  <div id="myTabContent" class="tab-content">
+    {% if settings.display_product_detail_description %}        
+      {% if product.description contains '[countdown]' %}            
+      {% assign des = product.description | split:'[/countdown]</p>' | last %}
+      <div id="collapse-tab1" class="tab-pane fade in active">{{ des }}</div>
+      {% else %}
+      <div id="collapse-tab1" class="tab-pane fade in active">{{ product.description }}</div>
+      {% endif %}
+    {% endif %}
+
+    {% if productMetafields.results %}
+    <div id="collapse-results" class="tab-pane fade">
+      {{ productMetafields.results }}
+    </div>
+    {% endif %}
+
+    {% if productMetafields.howtouse %}
+    <div id="collapse-howtouse" class="tab-pane fade">
+      {{ productMetafields.howtouse }}
+    </div>
+    {% endif %}
+
+    {% if productMetafields.ingredients %}
+    <div id="collapse-ingredients" class="tab-pane fade">
+      {{ productMetafields.ingredients }}
+    </div>
+    {% endif %}
+    
+    {% if settings.display_custom_tab %}
+    <div id="collapse-tab2" class="tab-pane fade">
+      {{ settings.custom_tab_content}}
+    </div>
+    {% endif %}
+    
+    {% if settings.display_size_chart %}
+    <div id="collapse-tab3" class="tab-pane fade">
+      {{ 'custom_size_chart_content.jpg' | asset_url | img_tag }}
+    </div>
+    {% endif %}
+    
+    {% if settings.display_product_reviews %}       
+    <div id="collapse-tab4" class="tab-pane fade">
+      {% comment %}
+        Add product review widget, must install Product Review App:
+        https://apps.shopify.com/product-reviews
+      {% endcomment %}
+      <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+<script>
+jQuery('#myTab a').click(function (e) {
+  e.preventDefault();
+  jQuery(this).tab('show');
+})
+</script>    
+{% endif %}

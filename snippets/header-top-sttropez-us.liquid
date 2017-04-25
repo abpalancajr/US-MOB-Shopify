@@ -1,0 +1,64 @@
+<div id="header-blue-bar" class="top">
+    <ul class="left-topbar-links">
+      <li class="menu-item"><a id="home-sttropez" href="http://sttropeztanonline.com">St. Tropez</a></li>
+      <li class="menu-item active"><a href="https://uk.store.marqueofbrands.com/collections/sttropez-professional">Professional Shop</a></li>
+      <li class="menu-item"><a href="http://www.sttropeztanonline.com/contact/">TOLL FREE: 1-800-914-3880</a></li>
+      <li class="menu-item"><a href="http://www.sttropeztanonline.com/wp-content/uploads/2016/05/USA_StTropez_Catalogue_Backstage.pdf" target="_blank">CATALOG DOWNLOAD</a></li>
+    </ul>
+    <ul class="right-topbar-links">
+      <!-- <li id="contact-info"> <a href="mailto:brands@marqueofbrands.com.au">TOLL FREE: 1-800-914-3880 | sales@sttropezprofessional.com</a></li> -->
+      <li class="shipping-text"><a href="http://www.sttropezprofessional.com/professional-products/"><span>FREE SHIPPING FOR ALL ORDERS OVER $1000 USD</span></a></li>
+      
+    <!-- {% if shop.customer_accounts_enabled %}
+    {% if customer %}
+      <li>
+        <a href="/account">My Account</a>
+      </li>
+      <li>
+        {{ 'Logout' | customer_logout_link }}
+      </li>
+    {% else %}
+      <li>
+        {{ 'Join' | customer_register_link }}
+      </li>
+      <li>
+        {{ 'Login' | customer_login_link }}
+      </li>
+    {% endif %}
+    {% endif %}
+
+    <li>
+      <a href="/pages/wish-list">
+        Wishlist
+      </a>
+    </li>
+    <li class="wrapper-top-cart" id="cartToggle">
+            <p class="top-cart">
+              <span class="icon">&nbsp;</span>
+              <a href="/cart">
+                <span class="first">Cart</span>
+              </a> 
+            </p>
+    </li>
+    </ul> -->
+</div>
+<script>
+  jQuery ('document').ready(function($){
+    var anchors = $('#header-blue-bar .left-topbar-links a');
+    var url = window.location.href.toLowerCase();
+    for (var i = 0; i < anchors.length; i++) {
+      if (anchors[i].href.length > 0 && anchors[i].href.indexOf("#") < 0) {
+        if (url.indexOf("us.store") >= 0) {
+          anchors[i].href = anchors[i].href.replace('://uk.', '://us.');
+        }
+        if (url.indexOf("au.store") >= 0) {
+          anchors[i].href = anchors[i].href.replace('://uk.', '://au.');
+          $('#home-sttropez').attr('href', 'http://sttropeztan.com.au');
+        }
+        if (url.indexOf("eu.store") >= 0) {
+          anchors[i].href = anchors[i].href.replace('://uk.', '://eu.');
+        }
+      }
+    }
+  })
+</script>
